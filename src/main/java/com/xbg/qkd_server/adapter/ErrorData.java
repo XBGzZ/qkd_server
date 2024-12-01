@@ -1,21 +1,24 @@
-package com.xbg.qkd_server.adapter.rsp;
+package com.xbg.qkd_server.adapter;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 /**
  * @Author XBG
- * @Description: 统一的返回容器
+ * @Description: 错误数据类型
  * @Date 2024-12-01
  */
 
 @Data
+@Builder
+@EqualsAndHashCode(callSuper = false)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Result {
-
+public class ErrorData implements  ReturnData{
     @JsonProperty("message")
     String message;
 

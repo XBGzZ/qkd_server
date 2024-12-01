@@ -1,8 +1,10 @@
-package com.xbg.qkd_server.adapter.pojo;
+package com.xbg.qkd_server.adapter.normalDatas;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.xbg.qkd_server.adapter.NormalData;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @Author XBG
@@ -11,8 +13,9 @@ import lombok.Data;
  */
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class KMEStatus {
+public class KMEStatus extends NormalData {
     // 源端 KME id
     @JsonProperty("source_KME_ID")
     String sourceKMEId;

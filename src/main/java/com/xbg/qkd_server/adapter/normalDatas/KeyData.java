@@ -1,9 +1,10 @@
-package com.xbg.qkd_server.adapter.pojo;
+package com.xbg.qkd_server.adapter.normalDatas;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jdk.jfr.Description;
+import com.xbg.qkd_server.adapter.NormalData;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @Author XBG
@@ -12,8 +13,9 @@ import lombok.Data;
  */
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class KeyData {
+public class KeyData extends NormalData {
 
     @JsonProperty("key_ID")
     String keyId;

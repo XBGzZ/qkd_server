@@ -6,26 +6,30 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.List;
+import java.time.LocalTime;
 
 /**
  * @Author XBG
- * @Description: 内部异常
- * @Date 2024-12-01
+ * @Description: 服务器异常
+ * @Date 2025-01-04
  */
-
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ErrorData implements  ReturnData{
+public class ExceptionData implements ReturnData {
+    @JsonProperty("timestamp")
+    LocalTime timestamp;
+
+    @JsonProperty("status")
+    Integer status;
+
+    @JsonProperty("error")
+    String error;
+
     @JsonProperty("message")
     String message;
 
-    @JsonProperty("details")
-    List<Object> details;
-
-    public void AddDetails(Object detail) {
-        details.add(detail);
-    }
+    @JsonProperty("path")
+    String path;
 }

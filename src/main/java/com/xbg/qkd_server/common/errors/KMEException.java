@@ -13,10 +13,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class KMEException extends Exception {
     String errorInfo;
-
+    Integer errorCode;
     public KMEException(String errorInfo) {
         super(errorInfo);
         this.errorInfo = errorInfo;
     }
-
 }

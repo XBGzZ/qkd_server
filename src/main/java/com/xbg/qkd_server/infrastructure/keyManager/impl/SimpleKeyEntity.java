@@ -21,32 +21,18 @@ public class SimpleKeyEntity implements KeyEntity {
     private String owner;
 
     @Override
-    public Boolean IsUsing() {
+    public Boolean isUsing() {
         return StringUtils.hasLength(owner);
     }
 
     @Override
-    public String GetKey() {
+    public String getKey() {
         return key;
     }
 
     @Override
-    public String GetKeyId() {
+    public String getKeyId() {
         return Id;
-    }
-
-    @Override
-    public Boolean SetOwner(String saeId) {
-        if(!StringUtils.hasLength(owner)){
-            owner = saeId;
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public String GetOwner() {
-        return owner;
     }
 
     @Override

@@ -13,7 +13,7 @@ public interface KeyEntity {
      * @param:
      * @return:
      */
-    Boolean IsUsing();
+    Boolean isUsing();
     /**
      * @description: 获取Base64密钥
      * @author: XBG
@@ -21,7 +21,7 @@ public interface KeyEntity {
      * @param:
      * @return:
      */
-    String GetKey();
+    String getKey();
     /**
      * @description: 获取 KeyId
      * @author: XBG
@@ -29,23 +29,6 @@ public interface KeyEntity {
      * @param:
      * @return:
      */
-    String GetKeyId();
+    String getKeyId();
 
-    /**
-     * @description: 设置使用的saeI
-     * @author: XBG
-     * @date: 2025/1/1 13:32
-     * @param:
-     * @return:
-     */
-    Boolean SetOwner(String saeId);
-
-    /**
-     * @description: 获取对象
-     * @author: XBG
-     * @date: 2025/1/1 22:27
-     * @param:
-     * @return:
-     */
-    String GetOwner();
 }

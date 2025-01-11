@@ -19,6 +19,8 @@ public class SimpleKeyEntity implements KeyEntity {
     private String key;
     // 所属 SAE
     private String owner;
+    // 分配时间
+    private Long allocateTime;
 
     @Override
     public Boolean isUsing() {
@@ -36,6 +38,24 @@ public class SimpleKeyEntity implements KeyEntity {
     }
 
     @Override
+    public Boolean setOwner(String owner) {
+        if (this.owner.equals(owner)) {
+            return true;
+        }
+        if (StringUtils.hasLength(owner)) {
+            return false;
+        }
+        this.owner = owner;
+        recordAllocateTime();
+        return true;
+    }
+
+    @Override
+    public Long getAllocateTime() {
+        return allocateTime;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         SimpleKeyEntity that = (SimpleKeyEntity) o;
@@ -45,5 +65,9 @@ public class SimpleKeyEntity implements KeyEntity {
     @Override
     public int hashCode() {
         return Objects.hash(Id, key);
+    }
+
+    private void recordAllocateTime() {
+        this.allocateTime = System.currentTimeMillis();
     }
 }

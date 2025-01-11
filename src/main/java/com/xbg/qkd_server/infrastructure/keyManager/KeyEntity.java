@@ -30,5 +30,20 @@ public interface KeyEntity {
      * @return:
      */
     String getKeyId();
-
+    /**
+     * @description: 分配密钥
+     * @author: XBG
+     * @date: 2025/1/11 19:25
+     * @param:
+     * @return:
+     */
+    Boolean setOwner(String owner);
+    /**
+     * @description: 获取创建时间
+     * @author: XBG
+     * @date: 2025/1/11 19:20
+     * @param:
+     * @return:
+     */
+    Long getAllocateTime();
 }

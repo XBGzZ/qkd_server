@@ -13,8 +13,8 @@ public abstract class AccessControllableKeyEntity extends SimpleKeyEntity implem
     // 密钥拥有者
     private String owner;
 
-    AccessControllableKeyEntity(String Id, String key, String owner) {
-        super(Id, key, owner);
+    AccessControllableKeyEntity(String id, String key) {
+        super(id, key);
     }
 
     @Override

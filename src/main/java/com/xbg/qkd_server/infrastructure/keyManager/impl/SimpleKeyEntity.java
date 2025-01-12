@@ -11,16 +11,20 @@ import java.util.Objects;
  * @description: 基本密钥对象
  * @date 2025/1/1 22:27
  */
-@Builder
 public class SimpleKeyEntity implements KeyEntity {
     // 密钥Id
-    private String Id;
+    private final String id;
     // 密钥本体
-    private String key;
+    private final String key;
     // 所属 SAE
     private String owner;
     // 分配时间
     private Long allocateTime;
+
+    public SimpleKeyEntity(String id, String key) {
+        this.id = id;
+        this.key = key;
+    }
 
     @Override
     public Boolean isUsing() {
@@ -34,7 +38,7 @@ public class SimpleKeyEntity implements KeyEntity {
 
     @Override
     public String getKeyId() {
-        return Id;
+        return id;
     }
 
     @Override
@@ -59,12 +63,12 @@ public class SimpleKeyEntity implements KeyEntity {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         SimpleKeyEntity that = (SimpleKeyEntity) o;
-        return Objects.equals(Id, that.Id) && Objects.equals(key, that.key);
+        return Objects.equals(id, that.id) && Objects.equals(key, that.key);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Id, key);
+        return Objects.hash(id, key);
     }
 
     private void recordAllocateTime() {

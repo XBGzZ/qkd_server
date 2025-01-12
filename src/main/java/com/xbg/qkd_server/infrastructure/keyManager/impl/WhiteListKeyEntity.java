@@ -17,15 +17,9 @@ public class WhiteListKeyEntity extends AccessControllableKeyEntity implements W
     // 访问控制开关
     private Boolean whiteListSwitch;
 
-    WhiteListKeyEntity(String Id, String key, String owner) {
-        super(Id, key, owner);
+    WhiteListKeyEntity(String Id, String key) {
+        super(Id, key);
         disableWhiteList();
-    }
-
-    WhiteListKeyEntity(String id, String key, String owner, Set<String> saeIdWhiteList) {
-        super(id, key, owner);
-        this.saeIdWhiteList = saeIdWhiteList;
-        enableWhiteList();
     }
 
     @Override
@@ -42,6 +36,7 @@ public class WhiteListKeyEntity extends AccessControllableKeyEntity implements W
     @Override
     public Boolean addWhiteListSaeIds(Set<String> saeIds) {
         saeIdWhiteList.addAll(saeIds);
+        enableWhiteList();
         return true;
     }
 

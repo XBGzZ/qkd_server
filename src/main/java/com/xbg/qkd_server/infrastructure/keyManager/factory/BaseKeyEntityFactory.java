@@ -1,4 +1,4 @@
-package com.xbg.qkd_server.infrastructure.keyManager.impl;
+package com.xbg.qkd_server.infrastructure.keyManager.factory;
 
 import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
 import com.xbg.qkd_server.infrastructure.keyManager.KeyFactory;
@@ -9,4 +9,8 @@ import com.xbg.qkd_server.infrastructure.keyManager.KeyFactory;
  * @date 2025/1/1 22:47
  */
 public abstract class BaseKeyEntityFactory implements KeyFactory {
+    @Override
+    public KeyEntity GenerateKeyEntity() {
+        return null;
+    }
 }

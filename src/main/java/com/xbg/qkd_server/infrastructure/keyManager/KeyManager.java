@@ -1,5 +1,7 @@
 package com.xbg.qkd_server.infrastructure.keyManager;
 
+import com.xbg.qkd_server.infrastructure.keyManager.config.BaseKeyManagerConfig;
+
 import java.util.List;
 
 /**
@@ -52,7 +54,7 @@ public interface KeyManager {
      * @param:
      * @return:
      */
-    KeyManagerConfig GetKeyManagerConfig();
+    BaseKeyManagerConfig GetKeyManagerConfig();
 
     /**
      * @description: 重新加载

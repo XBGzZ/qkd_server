@@ -1,9 +1,14 @@
-package com.xbg.qkd_server.infrastructure.keyManager.impl;
+package com.xbg.qkd_server.infrastructure.keyManager.keyEntity;
 
+import cn.hutool.core.codec.Base64;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
-import lombok.Builder;
 import org.springframework.util.StringUtils;
 
+import javax.crypto.SecretKey;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -15,15 +20,13 @@ public class SimpleKeyEntity implements KeyEntity {
     // 密钥Id
     private final String id;
     // 密钥本体
-    private final String key;
+    private final byte[] key;
     // 所属 SAE
     private String owner;
-    // 分配时间
-    private Long allocateTime;
 
-    public SimpleKeyEntity(String id, String key) {
+    public SimpleKeyEntity(String id, Integer keySize) {
         this.id = id;
-        this.key = key;
+        key = RandomUtil.randomBytes(keySize / Byte.SIZE);
     }
 
     @Override
@@ -33,7 +36,7 @@ public class SimpleKeyEntity implements KeyEntity {
 
     @Override
     public String getKey() {
-        return key;
+        return Base64.encode(key);
     }
 
     @Override
@@ -43,35 +46,34 @@ public class SimpleKeyEntity implements KeyEntity {
 
     @Override
     public Boolean setOwner(String owner) {
-        if (this.owner.equals(owner)) {
+        if (!StringUtils.hasLength(this.owner)) {
+            this.owner = owner;
             return true;
         }
-        if (StringUtils.hasLength(owner)) {
-            return false;
-        }
-        this.owner = owner;
-        recordAllocateTime();
-        return true;
+        return false;
+    }
+
+    @Override
+    public String getOwner() {
+        return owner;
     }
 
     @Override
     public Long getAllocateTime() {
-        return allocateTime;
+        return 0L;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         SimpleKeyEntity that = (SimpleKeyEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(key, that.key);
+        return Objects.equals(id, that.id) && Arrays.equals(key, that.key);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, key);
+        return Objects.hash(id, Arrays.hashCode(key));
     }
 
-    private void recordAllocateTime() {
-        this.allocateTime = System.currentTimeMillis();
-    }
+
 }

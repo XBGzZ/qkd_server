@@ -1,5 +1,7 @@
 package com.xbg.qkd_server.common.tools;
 
+import cn.hutool.crypto.SecureUtil;
+
 /**
  * @author XBG
  * @description: 密钥生成工具

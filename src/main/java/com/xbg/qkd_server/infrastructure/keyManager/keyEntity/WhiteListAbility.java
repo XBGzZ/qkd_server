@@ -1,4 +1,4 @@
-package com.xbg.qkd_server.infrastructure.keyManager.impl;
+package com.xbg.qkd_server.infrastructure.keyManager.keyEntity;
 
 import java.util.Set;
 
@@ -8,7 +8,7 @@ import java.util.Set;
  * @Date 2025-01-05
  */
 
-public interface WhiteListAbility {
+public interface WhiteListAbility extends KeyAccessControl{
     /**
      * @description: 添加可访问SAE
      * @author: XBG

@@ -31,17 +31,26 @@ public interface KeyEntity {
      */
     String getKeyId();
     /**
-     * @description: 分配密钥
+     * @description: 设置所属者
      * @author: XBG
      * @date: 2025/1/11 19:25
      * @param:
      * @return:
      */
     Boolean setOwner(String owner);
+
     /**
-     * @description: 获取创建时间
+     * @description: 所属者获取
      * @author: XBG
-     * @date: 2025/1/11 19:20
+     * @date: 2025/1/13 1:32
+     * @param:
+     * @return:
+     */
+    String getOwner();
+    /**
+     * @description:
+     * @author: XBG
+     * @date: 2025/1/13 1:46
      * @param:
      * @return:
      */

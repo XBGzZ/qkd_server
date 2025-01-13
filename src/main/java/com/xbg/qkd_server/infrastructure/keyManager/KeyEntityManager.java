@@ -9,7 +9,7 @@ import java.util.List;
  * @description: 密钥管理器接口
  * @date 2025/1/1 13:14
  */
-public interface KeyManager {
+public interface KeyEntityManager extends KeyAccessControl {
 
     /**
      * @description: 查询已经使用的密钥数量

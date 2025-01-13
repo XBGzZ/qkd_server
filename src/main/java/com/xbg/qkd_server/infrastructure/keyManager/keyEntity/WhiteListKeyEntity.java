@@ -1,6 +1,7 @@
 package com.xbg.qkd_server.infrastructure.keyManager.keyEntity;
 
 import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
+import lombok.Builder;
 
 import java.util.Set;
 
@@ -12,10 +13,9 @@ import java.util.Set;
  * whiteListSwitch：白名单开关，白名单必须拥有值的时候才能开启
  * @Date 2025-01-05
  */
-
 public class WhiteListKeyEntity implements WhiteListAbility, KeyEntity {
-    private final KeyEntity keyEntity;
 
+    private final KeyEntity keyEntity;
     // 可访问白名单
     private Set<String> saeIdWhiteList;
     // 访问控制开关

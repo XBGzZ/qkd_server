@@ -9,6 +9,7 @@ package com.xbg.qkd_server.common.tools;
 public class MathTool {
     /**
      * 计算以n为底的对数
+     *
      * @param x
      * @param n
      * @return
@@ -19,10 +20,28 @@ public class MathTool {
 
     /**
      * 计算以2为底的对数
+     *
      * @param x
      * @return
      */
     public static Double log2(double x) {
         return logN(x, 2);
+    }
+
+    /**
+     * 偶数判断
+     *
+     * @param n
+     * @return
+     */
+    public static boolean isEvenNumber(int n) {
+        return (n & 1) == 0;
+    }
+
+    public static boolean aIsDivisibleByN(int a, int n) {
+        if (n == 0 || a == 0) {
+            return false;
+        }
+        return a % n == 0;
     }
 }

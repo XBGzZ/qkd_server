@@ -1,4 +1,5 @@
-package com.xbg.qkd_server.infrastructure.keyManager.keyEntity;
+package com.xbg.qkd_server.infrastructure.keyManager;
+
 /**
  * @Author XBG
  * @Description: 密钥访问权限增强接口
@@ -13,5 +14,8 @@ public interface KeyAccessControl {
      * @param:
      * @return:
      */
-    Boolean isAccessAble(String saeId);
+    default Boolean isAccessAble(String saeId) {
+        return true;
+    }
+
 }

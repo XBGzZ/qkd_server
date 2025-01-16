@@ -1,6 +1,7 @@
 package com.xbg.qkd_server.infrastructure.keyManager;
 
-import com.xbg.qkd_server.infrastructure.keyManager.config.BaseKeyManagerConfig;
+import com.xbg.qkd_server.infrastructure.keyManager.manager.BaseKeyEntityManager;
+import com.xbg.qkd_server.infrastructure.keyManager.states.IManagerState;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * @description: 密钥管理器接口
  * @date 2025/1/1 13:14
  */
-public interface KeyEntityManager extends KeyAccessControl {
+public interface KeyEntityManager<T extends IManagerState,F extends KeyForm> extends KeyAccessControl {
 
     /**
      * @description: 查询已经使用的密钥数量
@@ -18,16 +19,7 @@ public interface KeyEntityManager extends KeyAccessControl {
      * @param:
      * @return:
      */
-    Integer AssignedKeysCount();
-
-    /**
-     * @description: 查询没有使用的密钥数量
-     * @author: XBG
-     * @date: 2025/1/1 14:08
-     * @param:
-     * @return:
-     */
-    Integer UndistributedKeysCount();
+    T managerState();
 
     /**
      * @description: 通过KeyId获取已分配的密钥实体
@@ -36,7 +28,7 @@ public interface KeyEntityManager extends KeyAccessControl {
      * @param:
      * @return:
      */
-    KeyEntity FindAssignedKeyByKeyId(String keyId);
+    KeyEntity findAssignedKeyByKeyId(String keyId);
 
     /**
      * @description: 通过saeId获取已分配的key
@@ -45,25 +37,16 @@ public interface KeyEntityManager extends KeyAccessControl {
      * @param:
      * @return:
      */
-    KeyEntity FindAssignedKeyBySaeId(String saeId);
-
-    /**
-     * @description: 获取配置文件
-     * @author: XBG
-     * @date: 2025/1/1 14:11
-     * @param:
-     * @return:
-     */
-    BaseKeyManagerConfig GetKeyManagerConfig();
+    KeyEntity findAssignedKeyBySaeId(String saeId);
 
     /**
      * @description: 重新加载
      * @author: XBG
      * @date: 2025/1/1 14:12
      * @param:
-     * @return: 加载的数量
+     * @return: 手动刷新密钥
      */
-    Integer ReloadKey();
+    Integer freshKey();
 
     /**
      * @description: 批量获取密钥
@@ -72,7 +55,7 @@ public interface KeyEntityManager extends KeyAccessControl {
      * @param:
      * @return:
      */
-    List<KeyEntity> BatchAcquireKeys(String saeId, Integer count);
+    List<KeyEntity> batchAcquireKeys(F form);
 
     /**
      * @description: 分配密钥
@@ -81,6 +64,5 @@ public interface KeyEntityManager extends KeyAccessControl {
      * @param:
      * @return:
      */
-    KeyEntity AcquireKey(String saeId);
-
+    KeyEntity acquireKey(F form);
 }

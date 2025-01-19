@@ -3,8 +3,10 @@ package com.xbg.qkd_server.infrastructure.keyManager.factory;
 import cn.hutool.extra.spring.SpringUtil;
 import com.xbg.qkd_server.common.annotations.KeyFactory;
 import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
+import com.xbg.qkd_server.infrastructure.keyManager.KeyEntityFactory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.context.annotation.Primary;
 
 import java.util.Optional;
 
@@ -13,8 +15,10 @@ import java.util.Optional;
  * @description: 白名单密钥工厂
  * @date 2025/1/14 0:49
  */
+@Primary
 @KeyFactory
 public class WhiteListKeyEntityFactory extends BaseKeyEntityFactory<WhiteListKeyEntityFactory.WhiteListFactoryConfig> {
+
     @Override
     protected KeyEntity genrateKeyEntity(String id, WhiteListFactoryConfig config) {
         if (config.getFactoryClazz() == null){

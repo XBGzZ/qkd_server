@@ -1,5 +1,7 @@
 package com.xbg.qkd_server.common.errors;
 
+import com.xbg.qkd_server.common.enums.ErrorCode;
+
 /**
  * @Author XBG
  * @Description: 密钥异常基类
@@ -7,7 +9,7 @@ package com.xbg.qkd_server.common.errors;
  */
 
 public class KeyException extends KMEException {
-    public KeyException(String errorInfo) {
+    public KeyException(ErrorCode errorInfo) {
         super(errorInfo);
     }
 }

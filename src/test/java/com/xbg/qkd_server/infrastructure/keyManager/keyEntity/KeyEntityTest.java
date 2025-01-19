@@ -2,6 +2,7 @@ package com.xbg.qkd_server.infrastructure.keyManager.keyEntity;
 
 import cn.hutool.core.util.IdUtil;
 import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
+import lombok.Getter;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

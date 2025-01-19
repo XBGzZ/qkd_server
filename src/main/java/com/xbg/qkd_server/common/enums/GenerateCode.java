@@ -7,7 +7,8 @@ package com.xbg.qkd_server.common.enums;
  */
 
 public enum GenerateCode implements ErrorCode {
-    SUCCESS("服务处理成功");
+    SUCCESS("服务处理成功"),
+    NOT_SUPPORT("功能不支持");
     private final String errorMsg;
 
     private GenerateCode(String errorMsg) {

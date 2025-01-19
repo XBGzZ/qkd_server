@@ -1,16 +1,16 @@
 package com.xbg.qkd_server.infrastructure.keyManager;
 
-import com.xbg.qkd_server.infrastructure.keyManager.manager.BaseKeyEntityManager;
 import com.xbg.qkd_server.infrastructure.keyManager.states.IManagerState;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author XBG
  * @description: 密钥管理器接口
  * @date 2025/1/1 13:14
  */
-public interface KeyEntityManager<T extends IManagerState,F extends KeyForm> extends KeyAccessControl {
+public interface KeyEntityManager<T extends IManagerState> extends KeyAccessControl {
 
     /**
      * @description: 查询已经使用的密钥数量
@@ -28,7 +28,7 @@ public interface KeyEntityManager<T extends IManagerState,F extends KeyForm> ext
      * @param:
      * @return:
      */
-    KeyEntity findAssignedKeyByKeyId(String keyId);
+    Set<KeyEntity> queryAssignedKeyByKeyId(Set<String> keyIds);
 
     /**
      * @description: 通过saeId获取已分配的key
@@ -37,32 +37,15 @@ public interface KeyEntityManager<T extends IManagerState,F extends KeyForm> ext
      * @param:
      * @return:
      */
-    KeyEntity findAssignedKeyBySaeId(String saeId);
+    List<KeyEntity> findAssignedKeyBySaeId(String saeId);
 
     /**
-     * @description: 重新加载
-     * @author: XBG
-     * @date: 2025/1/1 14:12
-     * @param:
-     * @return: 手动刷新密钥
-     */
-    Integer freshKey();
-
-    /**
-     * @description: 批量获取密钥
+     * @description: 申请密钥
      * @author: XBG
      * @date: 2025/1/1 14:16
      * @param:
      * @return:
      */
-    List<KeyEntity> batchAcquireKeys(F form);
+    List<KeyEntity> acquireKeys(String owner, Integer count, Integer size);
 
-    /**
-     * @description: 分配密钥
-     * @author: XBG
-     * @date: 2025/1/1 14:17
-     * @param:
-     * @return:
-     */
-    KeyEntity acquireKey(F form);
 }

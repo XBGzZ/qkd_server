@@ -1,5 +1,6 @@
 package com.xbg.qkd_server.common.errors;
 
+import com.xbg.qkd_server.common.enums.ErrorCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,11 +12,17 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class KMEException extends Exception {
-    String errorInfo;
-    Integer errorCode;
-    public KMEException(String errorInfo) {
-        super(errorInfo);
-        this.errorInfo = errorInfo;
+public class KMEException extends RuntimeException {
+    ErrorCode errorCode;
+    String detail;
+    public KMEException(ErrorCode errorCode,String detail) {
+        super(errorCode.GetErrorMsg());
+        this.errorCode = errorCode;
+        this.detail = detail;
+    }
+
+    public KMEException(ErrorCode errorCode) {
+        super(errorCode.GetErrorMsg());
+        this.errorCode = errorCode;
     }
 }

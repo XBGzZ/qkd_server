@@ -32,7 +32,7 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(KMEException.class)
     @ResponseBody
     public ReturnData kmeExceptionHandler(KMEException e){
-        return ErrorData.builder().message(e.getErrorInfo()).build();
+        return ErrorData.builder().message(e.getMessage()).build();
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)

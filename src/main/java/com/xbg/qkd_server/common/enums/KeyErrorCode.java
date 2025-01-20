@@ -11,6 +11,7 @@ public enum KeyErrorCode implements ErrorCode {
     OVER_COUNT_LIMIT("密钥数量超过限制"),
     TRY_LOCK_OVER_TIME("上锁超时"),
     TRY_LOCK_EXCEPTION("上锁异常"),
+    KEY_SIZE_CONFIG_INVALID("密钥配置项异常")
     ;
 
     private final String errorMsg;
@@ -20,7 +21,7 @@ public enum KeyErrorCode implements ErrorCode {
     }
 
     @Override
-    public String GetErrorMsg() {
+    public String getErrorMsg() {
         return errorMsg;
     }
 

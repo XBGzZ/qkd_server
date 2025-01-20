@@ -2,6 +2,8 @@ package com.xbg.qkd_server.infrastructure.keyManager.config;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
  * @author XBG
@@ -11,6 +13,8 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Component
+@ConfigurationProperties(prefix = "key-manager")
 public class MPOKeyManagerConfig extends BaseKeyManagerConfig {
     // 密钥存活时间，0代表关闭
     private Long keyLiveTime;

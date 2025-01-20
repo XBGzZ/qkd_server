@@ -21,7 +21,7 @@ public class WhiteListKeyEntity implements WhiteListAbility, KeyEntity {
     // 访问控制开关
     private Boolean whiteListSwitch;
 
-    WhiteListKeyEntity(KeyEntity keyEntity) {
+    public WhiteListKeyEntity(KeyEntity keyEntity) {
         this.keyEntity = keyEntity;
     }
 

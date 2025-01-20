@@ -6,3 +6,10 @@ spring:
       add-mappings: false #关闭资源映射，不然404无法拦截
 server:
   port: 8080
+
+key-manager:
+  key-factory-config:
+    strategy: simple_factory
+    key-size: 256
+    max-key-size: 1024
+    min-key-size: 128

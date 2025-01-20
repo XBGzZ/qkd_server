@@ -23,7 +23,7 @@ public enum KmeServiceCode implements ErrorCode {
     }
 
     @Override
-    public String GetErrorMsg() {
+    public String getErrorMsg() {
         return errorMsg;
     }
 }

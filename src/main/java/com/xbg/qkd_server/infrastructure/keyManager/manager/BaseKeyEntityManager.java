@@ -3,10 +3,7 @@ package com.xbg.qkd_server.infrastructure.keyManager.manager;
 import com.xbg.qkd_server.common.errors.NotSupportException;
 import com.xbg.qkd_server.infrastructure.keyManager.*;
 import com.xbg.qkd_server.infrastructure.keyManager.config.BaseKeyManagerConfig;
-import com.xbg.qkd_server.infrastructure.keyManager.factory.BaseSimpleKeyEntityFactory;
-import com.xbg.qkd_server.infrastructure.keyManager.factory.SimpleKeyEntityFactory;
 import com.xbg.qkd_server.infrastructure.keyManager.states.IManagerState;
-import jakarta.annotation.PostConstruct;
 import lombok.Setter;
 
 import java.util.*;
@@ -20,7 +17,7 @@ import java.util.stream.Collectors;
  * @description: 密钥实体基类，负责最基本的管理机制
  * @date 2025/1/14 22:40
  */
-public abstract class BaseKeyEntityManager<T extends IManagerState, C extends BaseKeyManagerConfig, F extends KeyEntityFactory<FC>, FC extends KeyEntityFactoryConfig> implements KeyEntityManager<T> {
+public abstract class BaseKeyEntityManager<T extends IManagerState, C extends BaseKeyManagerConfig> implements KeyEntityManager<T> {
 
     // 密钥缓存容器
     private Map<String, KeyEntity> allocatedKeys;
@@ -38,7 +35,7 @@ public abstract class BaseKeyEntityManager<T extends IManagerState, C extends Ba
     private final List<KeyEntity> keyList = new ArrayList<>();
 
     @Setter
-    F keyEntityFactory;
+    KeyEntityFactory keyEntityFactory;
 
     protected Boolean initialize(C config) {
         if (!loadConfig(config)) {
@@ -73,7 +70,7 @@ public abstract class BaseKeyEntityManager<T extends IManagerState, C extends Ba
     }
 
     // 密钥工厂工厂方法
-    protected abstract F KeyEntityFactoryFactory(C config);
+    protected abstract KeyEntityFactory KeyEntityFactoryFactory(C config);
 
     // 密钥缓存初始化
     protected Boolean initKeyCache(C config) {
@@ -122,7 +119,7 @@ public abstract class BaseKeyEntityManager<T extends IManagerState, C extends Ba
         if (count > config.getMaxKeyPerRequest()) {
             return false;
         }
-        return size <= config.getMaxKeySize() && size >= config.getMinKeySize();
+        return size <= config.getKeyFactoryConfig().getMaxKeySize() && size >= config.getKeyFactoryConfig().getMinKeySize();
     }
 
     /**
@@ -192,18 +189,14 @@ public abstract class BaseKeyEntityManager<T extends IManagerState, C extends Ba
         if (!preAllocateKeys(count)) {
             return Collections.emptyList();
         }
-//        var keyConfig = keyEntityFactory.getKeyConfig();
-        var keyConfig = buildKeyConfig(keyEntityFactory, count, size);
         List<KeyEntity> newKeys = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            Optional<KeyEntity> keyEntity = keyEntityFactory.produceKeyEntity(keyConfig);
+            Optional<KeyEntity> keyEntity = keyEntityFactory.produceKeyEntity(size);
             keyEntity.ifPresent(newKeys::add);
         }
         keyListRecord(newKeys);
         return newKeys;
     }
-
-    protected abstract FC buildKeyConfig(F keyEntityFactory, Integer count, Integer size);
 
     /**
      * 外部请求密钥

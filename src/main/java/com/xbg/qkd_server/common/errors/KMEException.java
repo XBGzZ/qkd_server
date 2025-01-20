@@ -16,13 +16,13 @@ public class KMEException extends RuntimeException {
     ErrorCode errorCode;
     String detail;
     public KMEException(ErrorCode errorCode,String detail) {
-        super(errorCode.GetErrorMsg());
+        super(errorCode.getErrorMsg());
         this.errorCode = errorCode;
         this.detail = detail;
     }
 
     public KMEException(ErrorCode errorCode) {
-        super(errorCode.GetErrorMsg());
+        super(errorCode.getErrorMsg());
         this.errorCode = errorCode;
     }
 }

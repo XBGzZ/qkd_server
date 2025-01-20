@@ -16,7 +16,7 @@ public enum GenerateCode implements ErrorCode {
     }
 
     @Override
-    public String GetErrorMsg() {
+    public String getErrorMsg() {
         return errorMsg;
     }
 }

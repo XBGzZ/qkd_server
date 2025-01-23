@@ -1,6 +1,6 @@
 package com.xbg.qkd_server.infrastructure.keyManager.config;
 
-import com.xbg.qkd_server.infrastructure.keyManager.factory.FactoryStrategy;
+import com.xbg.qkd_server.infrastructure.keyManager.KeyManagerConfig;
 import lombok.Data;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-public class BaseKeyManagerConfig {
+public class BaseKeyManagerConfig implements KeyManagerConfig {
     // 最大密钥数量
     private Integer maxKeyCount;
 
@@ -21,5 +21,4 @@ public class BaseKeyManagerConfig {
 
     // 工厂配置
     private KeyFactoryConfig keyFactoryConfig = new KeyFactoryConfig();
-
 }

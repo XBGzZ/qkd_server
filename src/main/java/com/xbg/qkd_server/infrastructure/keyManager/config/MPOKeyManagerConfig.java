@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "key-manager")
 public class MPOKeyManagerConfig extends BaseKeyManagerConfig {
     // 密钥存活时间，0代表关闭
-    private Long keyLiveTime;
+    private Long keyLiveTime = 0L;
 
     // 密钥缓存桶数量，最佳分配桶 数量 为 3个
-    private Integer keyCacheBuckets;
+    private Integer keyCacheBuckets  = 3;
 }

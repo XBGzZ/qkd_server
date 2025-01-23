@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "key-manager.key-factory-config")
 public class KeyFactoryConfig  {
     // 工厂策略
-    private FactoryStrategy strategy;
+    private FactoryStrategy strategy = FactoryStrategy.SIMPLE_FACTORY;
     // 最小密钥长度
     private Integer minKeySize = 128;
     // 密钥默认长度

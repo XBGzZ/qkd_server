@@ -10,7 +10,7 @@ import java.util.Set;
  * @description: 密钥管理器接口
  * @date 2025/1/1 13:14
  */
-public interface KeyEntityManager<T extends IManagerState> extends KeyAccessControl {
+public interface KeyEntityManager extends KeyAccessControl {
 
     /**
      * @description: 查询已经使用的密钥数量
@@ -19,7 +19,7 @@ public interface KeyEntityManager<T extends IManagerState> extends KeyAccessCont
      * @param:
      * @return:
      */
-    T managerState();
+    IManagerState managerState();
 
     /**
      * @description: 通过KeyId获取已分配的密钥实体

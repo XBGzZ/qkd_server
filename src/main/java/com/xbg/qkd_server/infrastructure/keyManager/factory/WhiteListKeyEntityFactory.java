@@ -1,14 +1,7 @@
 package com.xbg.qkd_server.infrastructure.keyManager.factory;
 
-import cn.hutool.extra.spring.SpringUtil;
-import com.xbg.qkd_server.common.annotations.KeyFactory;
 import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
-import com.xbg.qkd_server.infrastructure.keyManager.KeyEntityFactory;
-import com.xbg.qkd_server.infrastructure.keyManager.config.KeyFactoryConfig;
 import com.xbg.qkd_server.infrastructure.keyManager.keyEntity.WhiteListKeyEntity;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 
 import java.util.Objects;
@@ -33,11 +26,11 @@ public class WhiteListKeyEntityFactory extends BaseKeyEntityFactory {
     }
 
     @Override
-    protected KeyEntity genrateKeyEntity(String id,Integer keySize) {
+    protected KeyEntity generateKeyEntity(String id, Integer keySize) {
         if (Objects.isNull(baseKeyEntityFactory)) {
             return null;
         }
-        KeyEntity keyEntity = baseKeyEntityFactory.genrateKeyEntity(id, keySize);
+        KeyEntity keyEntity = baseKeyEntityFactory.generateKeyEntity(id, keySize);
         return new WhiteListKeyEntity(keyEntity);
     }
 

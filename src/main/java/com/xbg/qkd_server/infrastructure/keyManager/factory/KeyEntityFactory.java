@@ -1,4 +1,6 @@
-package com.xbg.qkd_server.infrastructure.keyManager;
+package com.xbg.qkd_server.infrastructure.keyManager.factory;
+
+import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
 
 import java.util.Optional;
 

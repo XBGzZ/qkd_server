@@ -1,5 +1,7 @@
 package com.xbg.qkd_server.infrastructure.keyManager.factory;
 
+import com.xbg.qkd_server.common.enums.ErrorCode;
+import com.xbg.qkd_server.common.enums.CommonCode;
 import com.xbg.qkd_server.common.enums.KeyErrorCode;
 import com.xbg.qkd_server.common.errors.KeyException;
 import com.xbg.qkd_server.common.tools.MathTool;
@@ -23,8 +25,8 @@ public abstract class SimpleBaseEntityFactory extends BaseKeyEntityFactory {
 
     public SimpleBaseEntityFactory(KeyFactoryConfig config) {
         List<Integer> sizeConfigs = List.of(config.getKeySize(), config.getMaxKeySize(), config.getMinKeySize());
-        for(Integer size : sizeConfigs) {
-            if(!sizeValueCheck(size)) {
+        for (Integer size : sizeConfigs) {
+            if (sizeValueCheck(size) != CommonCode.SUCCESS) {
                 throw new KeyException(KeyErrorCode.KEY_SIZE_CONFIG_INVALID);
             }
         }
@@ -33,21 +35,35 @@ public abstract class SimpleBaseEntityFactory extends BaseKeyEntityFactory {
 
     @Override
     public Optional<KeyEntity> produceKeyEntity(Integer keySize) {
-        if (!isKeySizeValid(keySize)) {
-            return Optional.empty();
+        var errorCode = isKeySizeValid(keySize);
+        if (isKeySizeValid(keySize) != CommonCode.SUCCESS) {
+            throw new KeyException(errorCode);
         }
-        return Optional.of(genrateKeyEntity(generateKeyId(), keySize));
+        return Optional.of(generateKeyEntity(generateKeyId(), keySize));
     }
 
-    protected boolean isKeySizeValid(Integer keySize) {
-        return sizeRangeCheck(keySize) && sizeValueCheck(keySize);
+    protected ErrorCode isKeySizeValid(Integer keySize) {
+        ErrorCode errorCode = sizeRangeCheck(keySize);
+        if (errorCode != CommonCode.SUCCESS) {
+            return errorCode;
+        }
+        return sizeValueCheck(keySize);
     }
 
-    protected boolean sizeRangeCheck(Integer keySize) {
-        return keySize <= config.getMaxKeySize() && keySize >= config.getMinKeySize();
+    protected ErrorCode sizeRangeCheck(Integer keySize) {
+        if (keySize > config.getMaxKeySize()) {
+            return KeyErrorCode.KEY_SIZE_TOO_LONG;
+        }
+        if (keySize < config.getMinKeySize()) {
+            return KeyErrorCode.KEY_SIZE_TOO_SHORT;
+        }
+        return CommonCode.SUCCESS;
     }
 
-    protected boolean sizeValueCheck(Integer keySize) {
-        return MathTool.isEvenNumber(keySize) && MathTool.aIsDivisibleByN(keySize, Byte.SIZE);
+    protected ErrorCode sizeValueCheck(Integer keySize) {
+        if (MathTool.isEvenNumber(keySize) && MathTool.aIsDivisibleByN(keySize, Byte.SIZE)) {
+            return CommonCode.SUCCESS;
+        }
+        return KeyErrorCode.KEY_SIZE_INVALID;
     }
 }

@@ -6,12 +6,11 @@ package com.xbg.qkd_server.common.enums;
  * @Date 2025-01-11
  */
 
-public enum GenerateCode implements ErrorCode {
-    SUCCESS("服务处理成功"),
-    NOT_SUPPORT("功能不支持");
+public enum CommonCode implements ErrorCode {
+    SUCCESS("服务处理成功");
     private final String errorMsg;
 
-    private GenerateCode(String errorMsg) {
+    private CommonCode(String errorMsg) {
         this.errorMsg = errorMsg;
     }
 

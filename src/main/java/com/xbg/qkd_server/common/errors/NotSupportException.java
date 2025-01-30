@@ -1,6 +1,6 @@
 package com.xbg.qkd_server.common.errors;
 
-import com.xbg.qkd_server.common.enums.GenerateCode;
+import com.xbg.qkd_server.common.enums.CommonErrorCode;
 
 /**
  * @Author XBG
@@ -11,6 +11,6 @@ import com.xbg.qkd_server.common.enums.GenerateCode;
 public class NotSupportException extends KMEException {
 
     public NotSupportException() {
-        super(GenerateCode.NOT_SUPPORT);
+        super(CommonErrorCode.NOT_SUPPORT);
     }
 }

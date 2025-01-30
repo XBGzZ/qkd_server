@@ -18,6 +18,6 @@ public interface ErrorCode {
      * @return
      */
     default Boolean IsSuccess() {
-        return this instanceof GenerateCode;
+        return this instanceof CommonCode;
     }
 }

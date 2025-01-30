@@ -15,7 +15,7 @@ public class SimpleKeyEntityFactory extends SimpleBaseEntityFactory {
     }
 
     @Override
-    protected KeyEntity genrateKeyEntity(String id, Integer keySize) {
+    protected KeyEntity generateKeyEntity(String id, Integer keySize) {
         return new SimpleKeyEntity(id, keySize);
     }
 }

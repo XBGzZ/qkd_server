@@ -3,8 +3,11 @@ package com.xbg.qkd_server.common.dto.resp;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xbg.qkd_server.adapter.NormalData;
+import com.xbg.qkd_server.infrastructure.keyManager.states.IManagerState;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 /**
  * @Author XBG
@@ -12,9 +15,10 @@ import lombok.EqualsAndHashCode;
  * @Date 2024-12-01
  */
 
-@Data
+@Getter
 @EqualsAndHashCode(callSuper = false)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@Builder
 public class StatusResp extends NormalData {
     // 当前直连KME ID
     @JsonProperty("source_KME_ID")
@@ -63,5 +67,28 @@ public class StatusResp extends NormalData {
     // 扩展字段
     @JsonProperty("status_extension")
     Object extension;
+
+    public static StatusResp adapter(IManagerState<?> state){
+        return StatusResp.builder()
+                .extension(state.getExtensionStatus())
+                .keySize(state.getDefaultKeySize())
+                .maxKeyCount(state.getMaxKeyCount())
+                .maxKeySize(state.getMaxKeySize())
+                .minKeySize(state.getMinKeySize())
+                .maxKeyPerRequest(state.getMaxKeyPerRequest())
+                .maxSAEIdCount(state.getMaxSAEIdCount())
+                .storedKeyCount(state.getStoredKeyCount())
+                .targetKMEId(state.getTargetKMEId())
+                .build();
+    }
+
+    public void setTarget(String slaveSAEId){
+        this.slaveSAEId = slaveSAEId;
+    }
+
+    public void setSource(String sourceKMEId,String masterSAEId) {
+        this.sourceKMEId = sourceKMEId;
+        this.masterSAEId = masterSAEId;
+    }
 }
 

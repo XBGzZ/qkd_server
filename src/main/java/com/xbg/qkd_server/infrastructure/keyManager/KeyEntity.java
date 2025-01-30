@@ -5,7 +5,7 @@ package com.xbg.qkd_server.infrastructure.keyManager;
  * @description: 密钥本体
  * @date 2025/1/1 13:14
  */
-public interface KeyEntity {
+public interface KeyEntity extends KeyAccessControl {
     /**
      * @description: 密钥是否使用
      * @author: XBG
@@ -55,4 +55,15 @@ public interface KeyEntity {
      * @return:
      */
     Long getAllocateTime();
+    /**
+     * 功能描述:
+     * <pre style="color:#fa5d19">
+     *     返回密钥长度
+     * </pre>
+     * @return:
+     * @throws:
+     * @author: XBG
+     * @date: 2025/1/29 1:15
+     */
+    Integer getKeySize();
 }

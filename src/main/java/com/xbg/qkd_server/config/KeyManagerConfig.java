@@ -1,18 +1,25 @@
 package com.xbg.qkd_server.config;
 
-import com.xbg.qkd_server.infrastructure.keyManager.KeyEntityFactory;
+import com.xbg.qkd_server.common.annotations.ConfigCheck;
+import com.xbg.qkd_server.config.checker.FactoryConfigChecker;
+import com.xbg.qkd_server.config.checker.KeyManagerConfigChecker;
+import com.xbg.qkd_server.infrastructure.keyManager.factory.KeyEntityFactory;
+import com.xbg.qkd_server.infrastructure.keyManager.KeyEntityManager;
+import com.xbg.qkd_server.infrastructure.keyManager.cache.SimpleCache;
 import com.xbg.qkd_server.infrastructure.keyManager.config.BaseKeyManagerConfig;
 import com.xbg.qkd_server.infrastructure.keyManager.config.MPOKeyManagerConfig;
-import com.xbg.qkd_server.infrastructure.keyManager.factory.FactoryStrategy;
-import com.xbg.qkd_server.infrastructure.keyManager.factory.SimpleKeyEntityFactory;
-import com.xbg.qkd_server.infrastructure.keyManager.factory.TimeRecordKeyEntityFactory;
-import com.xbg.qkd_server.infrastructure.keyManager.factory.WhiteListKeyEntityFactory;
-import lombok.val;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-import javax.net.ssl.KeyManager;
+import com.xbg.qkd_server.infrastructure.keyManager.factory.*;
+import com.xbg.qkd_server.infrastructure.keyManager.manager.SimpleKeyEntityManager;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.lang.Nullable;
+
+import static com.xbg.qkd_server.common.constant.ConfigConstants.*;
+
 
 /**
  * @author XBG
@@ -23,20 +30,23 @@ import javax.net.ssl.KeyManager;
 public class KeyManagerConfig {
 
     @Bean
-    @ConditionalOnProperty(prefix = "key-manager.key-factory-config", name = "strategy",havingValue = "simple_factory")
-    public KeyEntityFactory simpleKeyEntityFactory(MPOKeyManagerConfig config) {
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX_KEY_FACTORY_CONFIG, name = CONFIG_PREFIX_KEY_FACTORY_STRATEGY, havingValue = "simple_factory")
+    @ConfigCheck(FactoryConfigChecker.class)
+    public KeyEntityFactory simpleKeyEntityFactory(BaseKeyManagerConfig config) {
         return new SimpleKeyEntityFactory(config.getKeyFactoryConfig());
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "key-manager.key-factory-config", name = "strategy",havingValue = "time_record_factory")
-    public KeyEntityFactory timeRecordKeyEntityFactory(MPOKeyManagerConfig config) {
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX_KEY_FACTORY_CONFIG, name = CONFIG_PREFIX_KEY_FACTORY_STRATEGY, havingValue = "time_record_factory")
+    @ConfigCheck(FactoryConfigChecker.class)
+    public KeyEntityFactory timeRecordKeyEntityFactory(BaseKeyManagerConfig config) {
         return new TimeRecordKeyEntityFactory(config.getKeyFactoryConfig());
     }
 
 
     @Bean
-    @ConditionalOnProperty(prefix = "key-manager.key-factory-config", name = "strategy",havingValue = "simple_white_list_factory")
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX_KEY_FACTORY_CONFIG, name = CONFIG_PREFIX_KEY_FACTORY_STRATEGY, havingValue = "simple_white_list_factory")
+    @ConfigCheck(FactoryConfigChecker.class)
     public KeyEntityFactory simpleWhiteListKeyEntityFactory(MPOKeyManagerConfig config) {
         WhiteListKeyEntityFactory whiteListKeyEntityFactory = new WhiteListKeyEntityFactory();
         whiteListKeyEntityFactory.initialize(new SimpleKeyEntityFactory(config.getKeyFactoryConfig()));
@@ -44,10 +54,20 @@ public class KeyManagerConfig {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "key-manager.key-factory-config", name = "strategy",havingValue = "time_record_white_list_factory")
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX_KEY_FACTORY_CONFIG, name = CONFIG_PREFIX_KEY_FACTORY_STRATEGY, havingValue = "time_record_white_list_factory")
+    @ConfigCheck(FactoryConfigChecker.class)
     public KeyEntityFactory timeRecordWhiteListKeyEntityFactory(MPOKeyManagerConfig config) {
         WhiteListKeyEntityFactory whiteListKeyEntityFactory = new WhiteListKeyEntityFactory();
         whiteListKeyEntityFactory.initialize(new TimeRecordKeyEntityFactory(config.getKeyFactoryConfig()));
         return whiteListKeyEntityFactory;
     }
+
+    @Bean
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX_KEY_MANAGER_CONFIG, name = CONFIG_PREFIX_KEY_MANAGER_STRATEGY, havingValue = "simple_key_manager")
+    @ConfigCheck(KeyManagerConfigChecker.class)
+    public KeyEntityManager simpleKeyEntityManager(SimpleKeyEntityFactory factory, BaseKeyManagerConfig config) {
+        return new SimpleKeyEntityManager(new SimpleCache(config.getMaxKeyCount()), config, factory);
+    }
+
+
 }

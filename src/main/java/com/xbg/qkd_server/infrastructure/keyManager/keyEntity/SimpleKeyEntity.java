@@ -5,6 +5,7 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
+import lombok.ToString;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
@@ -16,17 +17,21 @@ import java.util.Objects;
  * @description: 基本密钥对象
  * @date 2025/1/1 22:27
  */
+@ToString
 public class SimpleKeyEntity implements KeyEntity {
     // 密钥Id
     private final String id;
     // 密钥本体
     private final byte[] key;
+
+    private final Integer keySize;
     // 所属 SAE
     private String owner;
 
     public SimpleKeyEntity(String id, Integer keySize) {
         this.id = id;
         key = RandomUtil.randomBytes(keySize / Byte.SIZE);
+        this.keySize = keySize;
     }
 
     @Override
@@ -61,6 +66,11 @@ public class SimpleKeyEntity implements KeyEntity {
     @Override
     public Long getAllocateTime() {
         return 0L;
+    }
+
+    @Override
+    public Integer getKeySize() {
+        return keySize;
     }
 
     @Override

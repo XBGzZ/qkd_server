@@ -1,10 +1,11 @@
 package com.xbg.qkd_server.infrastructure.keyManager.config;
 
-import com.xbg.qkd_server.infrastructure.keyManager.factory.FactoryStrategy;
+import com.xbg.qkd_server.infrastructure.keyManager.factory.strategy.FactoryStrategy;
 import lombok.Data;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+
+import static com.xbg.qkd_server.common.constant.ConfigConstants.CONFIG_PREFIX_KEY_FACTORY_CONFIG;
 
 /**
  * @author XBG
@@ -12,9 +13,7 @@ import org.springframework.stereotype.Component;
  * @date 2025/1/21 0:36
  */
 @Data
-@Component
-@ConfigurationProperties(prefix = "key-manager.key-factory-config")
-public class KeyFactoryConfig  {
+public class KeyFactoryConfig {
     // 工厂策略
     private FactoryStrategy strategy = FactoryStrategy.SIMPLE_FACTORY;
     // 最小密钥长度

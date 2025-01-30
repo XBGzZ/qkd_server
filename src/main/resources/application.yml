@@ -13,3 +13,7 @@ key-manager:
     key-size: 256
     max-key-size: 1024
     min-key-size: 128
+  key-manager-config:
+    strategy: simple_key_manager
+    max-key-per-request: 128
+

@@ -1,5 +1,7 @@
 package com.xbg.qkd_server.infrastructure.keyManager;
 
+import java.util.List;
+
 /**
  * @Author XBG
  * @Description: 密钥访问权限增强接口
@@ -15,6 +17,10 @@ public interface KeyAccessControl {
      * @return:
      */
     default Boolean isAccessAble(String saeId) {
+        return true;
+    }
+
+    default Boolean loadWhiteList(List<String> saeIds) {
         return true;
     }
 

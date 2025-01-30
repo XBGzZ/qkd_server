@@ -3,6 +3,9 @@ package com.xbg.qkd_server.common.errors;
 import com.xbg.qkd_server.common.enums.ErrorCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.util.StringUtils;
+
+import java.util.Optional;
 
 /**
  * @Author XBG
@@ -24,5 +27,7 @@ public class KMEException extends RuntimeException {
     public KMEException(ErrorCode errorCode) {
         super(errorCode.getErrorMsg());
         this.errorCode = errorCode;
+        detail = errorCode.getErrorMsg();
     }
+
 }

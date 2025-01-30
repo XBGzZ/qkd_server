@@ -1,6 +1,7 @@
 package com.xbg.qkd_server.infrastructure.keyManager.keyEntity;
 
 import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
+import lombok.ToString;
 import org.springframework.util.StringUtils;
 
 /**
@@ -8,6 +9,7 @@ import org.springframework.util.StringUtils;
  * @description: 实现时间记录功能的密钥实体
  * @date 2025/1/13 1:35
  */
+@ToString
 public class TimeRecordKeyEntity extends SimpleKeyEntity implements KeyEntity {
     // 分配时间
     private Long allocateTime =  0L;

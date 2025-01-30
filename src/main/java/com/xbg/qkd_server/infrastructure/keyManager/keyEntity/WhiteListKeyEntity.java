@@ -2,6 +2,7 @@ package com.xbg.qkd_server.infrastructure.keyManager.keyEntity;
 
 import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
 import lombok.Builder;
+import lombok.ToString;
 
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import java.util.Set;
  * whiteListSwitch：白名单开关，白名单必须拥有值的时候才能开启
  * @Date 2025-01-05
  */
+@ToString
 public class WhiteListKeyEntity implements WhiteListAbility, KeyEntity {
 
     private final KeyEntity keyEntity;
@@ -100,6 +102,11 @@ public class WhiteListKeyEntity implements WhiteListAbility, KeyEntity {
     @Override
     public Long getAllocateTime() {
         return keyEntity.getAllocateTime();
+    }
+
+    @Override
+    public Integer getKeySize() {
+        return keyEntity.getKeySize();
     }
 
 

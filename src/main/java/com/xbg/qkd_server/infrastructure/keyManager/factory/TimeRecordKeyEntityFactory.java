@@ -16,7 +16,7 @@ public class TimeRecordKeyEntityFactory extends SimpleBaseEntityFactory {
     }
 
     @Override
-    protected KeyEntity genrateKeyEntity(String id, Integer keySize) {
+    protected KeyEntity generateKeyEntity(String id, Integer keySize) {
         return new TimeRecordKeyEntity(id, keySize);
     }
 }

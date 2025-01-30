@@ -1,4 +1,4 @@
-package com.xbg.qkd_server.infrastructure.keyManager;
+package com.xbg.qkd_server.infrastructure.keyManager.config;
 
 /**
  * @author XBG
@@ -6,5 +6,5 @@ package com.xbg.qkd_server.infrastructure.keyManager;
  * @date 2025/1/22 18:47
  */
 public interface KeyManagerConfig {
-    Integer getMaxKeyPerRequest();
+
 }

@@ -1,5 +1,6 @@
 package com.xbg.qkd_server.infrastructure.keyManager;
 
+import com.xbg.qkd_server.common.errors.KeyException;
 import com.xbg.qkd_server.infrastructure.keyManager.states.IManagerState;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface KeyEntityManager extends KeyAccessControl {
      * @param:
      * @return:
      */
-    IManagerState managerState();
+    IManagerState<?> managerState();
 
     /**
      * @description: 通过KeyId获取已分配的密钥实体
@@ -37,7 +38,7 @@ public interface KeyEntityManager extends KeyAccessControl {
      * @param:
      * @return:
      */
-    List<KeyEntity> findAssignedKeyBySaeId(String saeId);
+    Boolean containTargetSAEKey(String saeId);
 
     /**
      * @description: 申请密钥
@@ -46,6 +47,7 @@ public interface KeyEntityManager extends KeyAccessControl {
      * @param:
      * @return:
      */
-    List<KeyEntity> acquireKeys(String owner, Integer count, Integer size);
+    List<KeyEntity> acquireKeys(String saeId, Integer count, Integer size) throws KeyException;
 
+    Boolean unregisterSae(String saeId);
 }

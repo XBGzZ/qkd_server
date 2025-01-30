@@ -1,15 +1,14 @@
 package com.xbg.qkd_server.infrastructure.keyManager.factoryTest;
 
 import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
-import com.xbg.qkd_server.infrastructure.keyManager.KeyEntityFactory;
+import com.xbg.qkd_server.infrastructure.keyManager.factory.KeyEntityFactory;
 import com.xbg.qkd_server.infrastructure.keyManager.keyEntity.TestKeyTool;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.TestPropertySource;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -33,5 +32,22 @@ public class KeyFactoryTest {
         System.out.println(key);
     }
 
+    @Test
+    public void t() {
+        List<Integer> ints = new ArrayList<>();
+        ints.add(1);
+        ints.add(2);
+        ints.add(3);
+        ints.add(4);
 
+        List<Integer> integerList = ints.subList(0, 2);
+        integerList.clear();
+        for(var ite:ints) {
+            System.out.println(ite);
+        }
+
+        for(var ite:integerList) {
+            System.out.println(ite);
+        }
+    }
 }

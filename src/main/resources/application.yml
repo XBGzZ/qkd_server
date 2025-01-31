@@ -4,16 +4,47 @@ spring:
   web:
     resources:
       add-mappings: false #关闭资源映射，不然404无法拦截
+
 server:
   port: 8080
 
+## 日志u配置
+logging:
+  file:
+    path: D:\JAVA_WORK_DIR\qkd_server\log
+    name: ${spring.application.name}
+  level:
+    root: info
+    com:
+      xbg:
+        qkd_server: debug
+
+
 key-manager:
+  key-manager-config:
+    kme-id: Alice
+    strategy: simple_key_manager
+    max-key-per-request: 128
   key-factory-config:
     strategy: simple_factory
     key-size: 256
     max-key-size: 1024
     min-key-size: 128
-  key-manager-config:
-    strategy: simple_key_manager
-    max-key-per-request: 128
+  kme-router-config:
+    strategy: static_router
+    kme-list:
+      - kme-id: Alice
+        ip-addr: 127.0.0.1
+        port: 8080
+        sae:
+          - sae-id: SAE1
+            ip-addr: 127.0.0.1
+            port: 0
+      - kme-id: Bob
+        ip-addr: 127.0.0.1
+        port: 8081
+        sae:
+          - sae-id: SAE2
+            ip-addr: 127.0.0.1
+            port: 12
 

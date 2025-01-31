@@ -21,7 +21,5 @@ public interface IManagerState<T extends Object> {
 
     Integer getMaxSAEIdCount();
 
-    String getTargetKMEId();
-
     T getExtensionStatus();
 }

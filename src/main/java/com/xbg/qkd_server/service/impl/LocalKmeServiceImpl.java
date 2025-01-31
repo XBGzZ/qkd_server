@@ -1,5 +1,6 @@
 package com.xbg.qkd_server.service.impl;
 
+import com.xbg.qkd_server.common.dto.resp.StatusResp;
 import com.xbg.qkd_server.common.dto.server.HandleResult;
 import com.xbg.qkd_server.common.enums.CommonErrorCode;
 import com.xbg.qkd_server.common.enums.ErrorCode;
@@ -7,6 +8,7 @@ import com.xbg.qkd_server.common.enums.KeyErrorCode;
 import com.xbg.qkd_server.common.enums.ServerErrorCode;
 import com.xbg.qkd_server.common.errors.NotSupportException;
 import com.xbg.qkd_server.common.tools.MathTool;
+import com.xbg.qkd_server.infrastructure.RouterManager.KmeRouterManager;
 import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
 import com.xbg.qkd_server.infrastructure.keyManager.KeyEntityManager;
 import com.xbg.qkd_server.infrastructure.keyManager.states.IManagerState;
@@ -47,6 +49,10 @@ public class LocalKmeServiceImpl implements LocalKmeService {
     @Lazy
     @Autowired
     KeyEntityManager manager;
+
+    @Autowired
+    KmeRouterManager routerManager;
+
     @Override
     public HandleResult<List<KeyEntity>> acquireSimpleKey(String saeId, Integer count, Integer size) {
         if (!acquireSimpleCheck(saeId,count,size)) {
@@ -89,16 +95,25 @@ public class LocalKmeServiceImpl implements LocalKmeService {
                 .build();
     }
 
+    /**
+     * 同KME不同SAE互相查询
+     * @param slaveSAEId
+     * @return
+     */
     @Override
-    public HandleResult<IManagerState<?>> getKmeState() {
+    public HandleResult<StatusResp> getKmeState(String slaveSAEId) {
         IManagerState<?> iManagerState = manager.managerState();
         if (Objects.isNull(iManagerState)) {
-            return HandleResult.<IManagerState<?>>builder()
+            return HandleResult.<StatusResp>builder()
                     .errorCode(CommonErrorCode.NULL_POINTER)
                     .build();
         }
-        return HandleResult.<IManagerState<?>>builder()
-                .result(iManagerState)
+        StatusResp adapter = StatusResp.adapter(iManagerState);
+        // 只需要填写对应的信息即可
+        adapter.setTarget(slaveSAEId,routerManager.getCurrentSAEId());
+        adapter.setSource(routerManager.getCurrentSAEId(),routerManager.getCurrentKME());
+        return HandleResult.<StatusResp>builder()
+                .result(adapter)
                 .build();
     }
 

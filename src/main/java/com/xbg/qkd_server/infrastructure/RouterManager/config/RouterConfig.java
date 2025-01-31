@@ -28,6 +28,6 @@ import static com.xbg.qkd_server.common.constant.ConfigConstants.CONFIG_PREFIX_K
 public class RouterConfig {
     RouterStrategy strategy = RouterStrategy.STATIC_ROUTER;
 
-//    @Nullable
+    @Nullable
     List<KMERouterConfig> kmeList;
 }

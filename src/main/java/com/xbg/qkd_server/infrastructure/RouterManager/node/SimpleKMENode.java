@@ -1,5 +1,7 @@
 package com.xbg.qkd_server.infrastructure.RouterManager.node;
 
+import com.xbg.qkd_server.infrastructure.RouterManager.Host;
+import com.xbg.qkd_server.infrastructure.RouterManager.KMENode;
 import lombok.EqualsAndHashCode;
 
 import java.util.HashSet;
@@ -19,18 +21,18 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @date 2025-01-29 23:17
  */
 @EqualsAndHashCode(callSuper = true)
-public final class KMENode extends SecurityNode {
+public final class SimpleKMENode extends SecurityAbstractNode implements KMENode {
 
 
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
-    private final Set<SAENode> saeNodes = new HashSet<>();
+    private final Set<SimpleSAENode> saeNodes = new HashSet<>();
 
-    public KMENode(String id, String ip, Integer port) {
+    public SimpleKMENode(String id, String ip, Integer port) {
         super(id, ip, port);
     }
 
-    public KMENode(String id, String ip) {
+    public SimpleKMENode(String id, String ip) {
         super(id, ip);
     }
 
@@ -39,7 +41,7 @@ public final class KMENode extends SecurityNode {
         return NodeType.KME;
     }
 
-    public Boolean regSAENode(SAENode node) {
+    public Boolean regSAENode(SimpleSAENode node) {
         boolean add = true;
         lock.writeLock().lock();
         add = saeNodes.add(node);
@@ -47,25 +49,25 @@ public final class KMENode extends SecurityNode {
         return add;
     }
 
-    public Optional<SAENode> queryById(String saeId) {
+    public Optional<SimpleSAENode> queryById(String saeId) {
         lock.readLock().lock();
-        Optional<SAENode> findOne = saeNodes.stream().filter(node -> Objects.equals(node.getId(), saeId))
+        Optional<SimpleSAENode> findOne = saeNodes.stream().filter(node -> Objects.equals(node.getId(), saeId))
                 .findAny();
         lock.readLock().unlock();
         return findOne;
     }
 
-    public Optional<SAENode> queryByIp(String saeIp) {
+    public Optional<SimpleSAENode> queryByIp(String saeIp) {
         lock.readLock().lock();
-        Optional<SAENode> findOne = saeNodes.stream().filter(node -> Objects.equals(node.getHost().getIp(), saeIp))
+        Optional<SimpleSAENode> findOne = saeNodes.stream().filter(node -> Objects.equals(node.getHost().getIp(), saeIp))
                 .findAny();
         lock.readLock().unlock();
         return findOne;
     }
 
-    public Optional<SAENode> queryByHost(String saeIp, Integer saePort) {
+    public Optional<SimpleSAENode> queryByHost(String saeIp, Integer saePort) {
         lock.readLock().lock();
-        Optional<SAENode> findOne = saeNodes.stream().filter(node -> Objects.equals(node.getHost(), new Host(saeIp, saePort)))
+        Optional<SimpleSAENode> findOne = saeNodes.stream().filter(node -> Objects.equals(node.getHost(), new Host(saeIp, saePort)))
                 .findAny();
         lock.readLock().unlock();
         return findOne;

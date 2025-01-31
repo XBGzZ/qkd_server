@@ -2,7 +2,7 @@ package com.xbg.qkd_server.infrastructure.keyManager.config;
 
 import com.xbg.qkd_server.infrastructure.keyManager.manager.strategy.KeyManagerStrategy;
 import lombok.Data;
-
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -28,5 +28,6 @@ public class BaseKeyManagerConfig implements KeyManagerConfig {
     private Integer maxSaeIdCount = 6;
 
     // 工厂配置
-    private KeyFactoryConfig keyFactoryConfig = new KeyFactoryConfig();
+    @Autowired
+    private KeyFactoryConfig keyFactoryConfig;
 }

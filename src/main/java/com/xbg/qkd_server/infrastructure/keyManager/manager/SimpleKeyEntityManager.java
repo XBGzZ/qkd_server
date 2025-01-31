@@ -35,7 +35,6 @@ public class SimpleKeyEntityManager extends AbstractBaseKeyEntityManager<SimpleC
                 .maxKeyPerRequest(config.getMaxKeyPerRequest())
                 .maxSAEIdCount(config.getMaxSaeIdCount())
                 .storedKeyCount(cache.usedCacheSize())
-                .targetKMEId(config.getKmeId())
                 .build();
     }
 

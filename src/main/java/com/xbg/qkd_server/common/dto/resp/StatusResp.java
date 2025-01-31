@@ -78,12 +78,12 @@ public class StatusResp extends NormalData {
                 .maxKeyPerRequest(state.getMaxKeyPerRequest())
                 .maxSAEIdCount(state.getMaxSAEIdCount())
                 .storedKeyCount(state.getStoredKeyCount())
-                .targetKMEId(state.getTargetKMEId())
                 .build();
     }
 
-    public void setTarget(String slaveSAEId){
+    public void setTarget(String slaveSAEId,String targetKMEId){
         this.slaveSAEId = slaveSAEId;
+        this.targetKMEId = targetKMEId;
     }
 
     public void setSource(String sourceKMEId,String masterSAEId) {

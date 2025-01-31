@@ -33,4 +33,6 @@ public class ConfigConstants {
     public static final String CONFIG_PREFIX_KME_ROUTER = "kme-router-config";
 
     public static final String CONFIG_PREFIX_KME_ROUTER_CONFIG = CONFIG_PREFIX_ROOT + CONFIG_SPLIT + CONFIG_PREFIX_KME_ROUTER;
+
+    public static final String CONFIG_PREFIX_KME_ROUTER_STRATEGY = "strategy";
 }

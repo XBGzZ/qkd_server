@@ -4,9 +4,13 @@ import com.xbg.qkd_server.infrastructure.RouterManager.KmeRouterManager;
 import com.xbg.qkd_server.infrastructure.RouterManager.StaticKmeRouterManager;
 import com.xbg.qkd_server.infrastructure.RouterManager.config.RouterConfig;
 import com.xbg.qkd_server.infrastructure.keyManager.config.BaseKeyManagerConfig;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+
+import static com.xbg.qkd_server.common.constant.ConfigConstants.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,6 +32,7 @@ public class KMERouterConfig {
      * @return
      */
     @Bean
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX_KME_ROUTER_CONFIG, name = CONFIG_PREFIX_KME_ROUTER_STRATEGY, havingValue = "static_router")
     public KmeRouterManager staticRouterManager(RouterConfig routerConfig, BaseKeyManagerConfig kmeConfig){
         StaticKmeRouterManager staticKmeRouterManager = new StaticKmeRouterManager(kmeConfig.getKmeId());
         staticKmeRouterManager.initConfig(routerConfig);

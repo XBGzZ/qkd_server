@@ -36,7 +36,7 @@ public abstract class BaseConfigChecker<T extends Annotation> implements ConfigC
         }
         String methodName = joinPoint.getSignature().getName();
         if(!checkAnnotationValid(joinPoint,methodName,anno.get())) {
-            log.warn("method [{}] annotation [{}] is not standard format", methodName,anno.get().getClass().getName());
+            log.warn("method [{}] annotation [{}] is not standard format", methodName,anno.getClass().getSimpleName());
         }
     }
 

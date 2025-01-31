@@ -40,9 +40,6 @@ public class ManagerState implements IManagerState<Object> {
     @JsonProperty("max_SAE_ID_count")
     Integer maxSAEIdCount;
 
-    @JsonProperty("target_KME_ID")
-    String targetKMEId;
-
     @Override
     public Integer getDefaultKeySize() {
         return keySize;
@@ -87,7 +84,4 @@ public class ManagerState implements IManagerState<Object> {
         throw new NotSupportException();
     }
 
-    public String getTargetKMEId() {
-        return targetKMEId;
-    }
 }

@@ -1,5 +1,6 @@
 package com.xbg.qkd_server.service;
 
+import com.xbg.qkd_server.common.dto.resp.StatusResp;
 import com.xbg.qkd_server.common.dto.server.HandleResult;
 import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
 import com.xbg.qkd_server.infrastructure.keyManager.states.IManagerState;
@@ -56,7 +57,7 @@ public interface IKmeService {
      * @author: XBG
      * @date: 2025/1/29 21:54
      */
-    HandleResult<IManagerState<?>> getKmeState();
+    HandleResult<StatusResp> getKmeState(String slaveSAEId);
 
     /**
      * 功能描述:

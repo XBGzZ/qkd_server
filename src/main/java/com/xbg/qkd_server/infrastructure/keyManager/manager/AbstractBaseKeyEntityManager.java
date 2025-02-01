@@ -42,9 +42,9 @@ public abstract class AbstractBaseKeyEntityManager<Cache extends KeyEntityCache,
     public abstract IManagerState<?> managerState();
 
     @Override
-    public Set<KeyEntity> queryAssignedKeyByKeyId(Set<String> keyIds) {
+    public List<KeyEntity> queryAssignedKeyByKeyId(Set<String> keyIds) {
         return keyIds.stream()
-                .map(cache::queryEntity).collect(Collectors.toSet());
+                .map(cache::queryEntity).toList();
     }
 
     /**

@@ -29,7 +29,7 @@ public interface KeyEntityManager extends KeyAccessControl {
      * @param:
      * @return:
      */
-    Set<KeyEntity> queryAssignedKeyByKeyId(Set<String> keyIds);
+    List<KeyEntity> queryAssignedKeyByKeyId(Set<String> keyIds);
 
     /**
      * @description: 通过saeId获取已分配的key

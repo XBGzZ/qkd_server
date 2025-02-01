@@ -3,8 +3,11 @@ package com.xbg.qkd_server.common.dto.resp;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xbg.qkd_server.adapter.NormalData;
+import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -17,6 +20,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@Builder
 public class KeyDataResp extends NormalData {
 
     @JsonProperty("Keys")
@@ -34,6 +38,7 @@ public class KeyDataResp extends NormalData {
     @Data
     @EqualsAndHashCode(callSuper = false)
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Builder
     public static class KeyDataInfo extends NormalData {
         // UUID 的密钥索引
         @JsonProperty("key_ID")
@@ -50,6 +55,13 @@ public class KeyDataResp extends NormalData {
         @JsonProperty("key_extension")
         Object keyExtension;
 
+        public static KeyDataInfo adapter(KeyEntity keyEntity) {
+            return KeyDataInfo.builder()
+                    .key(keyEntity.getKey())
+                    .keyId(keyEntity.getKeyId())
+                    .keyExtension(keyEntity.getExtension())
+                    .build();
+        }
     }
 
 }

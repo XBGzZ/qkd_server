@@ -1,5 +1,6 @@
 package com.xbg.qkd_server.service.impl;
 
+import com.xbg.qkd_server.common.dto.resp.KeyDataResp;
 import com.xbg.qkd_server.common.dto.resp.StatusResp;
 import com.xbg.qkd_server.common.dto.server.HandleResult;
 import com.xbg.qkd_server.common.enums.CommonErrorCode;
@@ -54,49 +55,65 @@ public class LocalKmeServiceImpl implements LocalKmeService {
     KmeRouterManager routerManager;
 
     @Override
-    public HandleResult<List<KeyEntity>> acquireSimpleKey(String saeId, Integer count, Integer size) {
-        if (!acquireSimpleCheck(saeId,count,size)) {
-            return HandleResult.<List<KeyEntity>>builder()
+    public HandleResult<KeyDataResp> acquireSimpleKey(String saeId, Integer count, Integer size) {
+        if (!acquireSimpleCheck(saeId, count, size)) {
+            return HandleResult.<KeyDataResp>builder()
                     .errorCode(KeyErrorCode.KEY_ERROR)
-                    .result(List.of())
                     .build();
         }
         List<KeyEntity> keyEntities = manager.acquireKeys(saeId, count, size);
-        return HandleResult.<List<KeyEntity>>builder()
-                .result(keyEntities)
+        KeyDataResp keyDataResp = translateToKeyDataResp(keyEntities);
+        return HandleResult.<KeyDataResp>builder()
+                .result(keyDataResp)
                 .build();
     }
 
     @Override
-    public HandleResult<List<KeyEntity>> acquireWhiteListControlKey(String saeId, Integer count, Integer size, List<String> whiteList) {
+    public HandleResult<KeyDataResp> acquireWhiteListControlKey(String saeId, Integer count, Integer size, List<String> whiteList) {
         if (Objects.isNull(whiteList) || whiteList.isEmpty()) {
-            return acquireSimpleKey(saeId,count,size);
+            return acquireSimpleKey(saeId, count, size);
         }
-        HandleResult<List<KeyEntity>> result = acquireSimpleKey(saeId,count,size);
-        result.getResult().forEach(item->{
+        List<KeyEntity> keyEntities = manager.acquireKeys(saeId, count, size);
+        keyEntities.forEach(item -> {
             item.loadWhiteList(whiteList);
         });
-        return result;
+        KeyDataResp keyDataResp = translateToKeyDataResp(keyEntities);
+        return HandleResult.<KeyDataResp>builder()
+                .result(keyDataResp)
+                .build();
+    }
+
+    private KeyDataResp translateToKeyDataResp(List<KeyEntity> keyEntities) {
+        List<KeyDataResp.KeyDataInfo> list = keyEntities.stream()
+                .map(KeyDataResp.KeyDataInfo::adapter)
+                .toList();
+        return KeyDataResp.builder()
+                .keys(list)
+                .build();
     }
 
     @Override
-    public HandleResult<List<KeyEntity>> querySAEKeyById(String querySaeId, List<String> keyId) {
-        Set<KeyEntity> keyEntities = manager.queryAssignedKeyByKeyId(Set.of(querySaeId));
+    public HandleResult<KeyDataResp> querySAEKeyById(String querySaeId, List<String> keyId) {
+        List<KeyEntity> keyEntities = manager.queryAssignedKeyByKeyId(Set.of(querySaeId));
         ArrayList<KeyEntity> result = new ArrayList<>();
-        for (var item:keyEntities) {
+        for (var item : keyEntities) {
             if (!item.isAccessAble(querySaeId)) {
-                log.warn("SAE[{}] can't access Key [{}]",querySaeId,item.getKeyId());
+                log.warn("SAE[{}] can't access Key [{}]", querySaeId, item.getKeyId());
                 continue;
             }
             result.add(item);
         }
-        return HandleResult.<List<KeyEntity>>builder()
-                .result(result)
+        KeyDataResp keyDataResp = translateToKeyDataResp(result);
+        return HandleResult.<KeyDataResp>builder()
+                .result(keyDataResp)
                 .build();
     }
 
     /**
      * 同KME不同SAE互相查询
+     * 如果查询的SAE和被查询的SAE是同一个KME的
+     * 那么返回的target和source KME是同一个KME
+     *
      * @param slaveSAEId
      * @return
      */
@@ -110,8 +127,8 @@ public class LocalKmeServiceImpl implements LocalKmeService {
         }
         StatusResp adapter = StatusResp.adapter(iManagerState);
         // 只需要填写对应的信息即可
-        adapter.setTarget(slaveSAEId,routerManager.getCurrentSAEId());
-        adapter.setSource(routerManager.getCurrentSAEId(),routerManager.getCurrentKME());
+        adapter.setTarget(slaveSAEId, routerManager.getCurrentSAEId());
+        adapter.setSource(routerManager.getCurrentSAEId(), routerManager.getCurrentKME());
         return HandleResult.<StatusResp>builder()
                 .result(adapter)
                 .build();

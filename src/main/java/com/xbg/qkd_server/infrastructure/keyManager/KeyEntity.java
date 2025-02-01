@@ -1,5 +1,7 @@
 package com.xbg.qkd_server.infrastructure.keyManager;
 
+import java.util.Objects;
+
 /**
  * @author XBG
  * @description: 密钥本体
@@ -14,6 +16,7 @@ public interface KeyEntity extends KeyAccessControl {
      * @return:
      */
     Boolean isUsing();
+
     /**
      * @description: 获取Base64密钥
      * @author: XBG
@@ -22,6 +25,7 @@ public interface KeyEntity extends KeyAccessControl {
      * @return:
      */
     String getKey();
+
     /**
      * @description: 获取 KeyId
      * @author: XBG
@@ -30,6 +34,7 @@ public interface KeyEntity extends KeyAccessControl {
      * @return:
      */
     String getKeyId();
+
     /**
      * @description: 设置所属者
      * @author: XBG
@@ -47,6 +52,7 @@ public interface KeyEntity extends KeyAccessControl {
      * @return:
      */
     String getOwner();
+
     /**
      * @description:
      * @author: XBG
@@ -55,15 +61,26 @@ public interface KeyEntity extends KeyAccessControl {
      * @return:
      */
     Long getAllocateTime();
+
     /**
      * 功能描述:
      * <pre style="color:#fa5d19">
      *     返回密钥长度
      * </pre>
+     *
      * @return:
      * @throws:
      * @author: XBG
      * @date: 2025/1/29 1:15
      */
     Integer getKeySize();
+
+    /**
+     * 扩展字段
+     *
+     * @return
+     */
+    default Object getExtension() {
+        return null;
+    }
 }

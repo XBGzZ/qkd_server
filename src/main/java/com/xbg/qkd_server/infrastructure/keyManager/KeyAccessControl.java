@@ -20,6 +20,11 @@ public interface KeyAccessControl {
         return true;
     }
 
+    /**
+     * 加载白名单
+     * @param saeIds
+     * @return
+     */
     default Boolean loadWhiteList(List<String> saeIds) {
         return true;
     }

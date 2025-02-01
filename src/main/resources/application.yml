@@ -21,15 +21,18 @@ logging:
 
 
 key-manager:
+  ## 密钥管理器配置
   key-manager-config:
     kme-id: Alice
     strategy: simple_key_manager
     max-key-per-request: 128
+  ## 密钥工厂配置
   key-factory-config:
     strategy: simple_factory
     key-size: 256
     max-key-size: 1024
     min-key-size: 128
+  ## KME路由配置，默认采用静态路由配置
   kme-router-config:
     strategy: static_router
     kme-list:

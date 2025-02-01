@@ -1,5 +1,6 @@
 package com.xbg.qkd_server.service;
 
+import com.xbg.qkd_server.common.dto.resp.KeyDataResp;
 import com.xbg.qkd_server.common.dto.resp.StatusResp;
 import com.xbg.qkd_server.common.dto.server.HandleResult;
 import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
@@ -26,7 +27,7 @@ public interface IKmeService {
      * @param size  获取长度
      * @return
      */
-    HandleResult<List<KeyEntity>> acquireSimpleKey(String saeId, Integer count, Integer size);
+    HandleResult<KeyDataResp> acquireSimpleKey(String saeId, Integer count, Integer size);
 
     /**
      * 请求带有白名单机制的密钥
@@ -37,7 +38,7 @@ public interface IKmeService {
      * @param whiteList 白名单，白名单可以为空，空白名单表示不开启白名单管控
      * @return
      */
-    HandleResult<List<KeyEntity>> acquireWhiteListControlKey(String saeId, Integer count, Integer size, List<String> whiteList);
+    HandleResult<KeyDataResp> acquireWhiteListControlKey(String saeId, Integer count, Integer size, List<String> whiteList);
 
     /**
      * 密钥查询接口
@@ -45,7 +46,7 @@ public interface IKmeService {
      * @param keyId
      * @return
      */
-    HandleResult<List<KeyEntity>> querySAEKeyById(String querySaeId, List<String> keyId);
+    HandleResult<KeyDataResp> querySAEKeyById(String querySaeId, List<String> keyId);
 
     /**
      * 功能描述:

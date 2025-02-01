@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 public class KeyQueryReq {
     @JsonProperty("ket_IDs")
-    private List<KeyQueryInfo> keyQueryReq;
+    private List<KeyQueryInfo> keyQueryReqInfo;
 
     @Data
     public static class KeyQueryInfo {

@@ -108,7 +108,7 @@ public class SAEController {
 
 
     @PostMapping("/{master_SAE_ID}/dec_keys")
-    public ReturnData postKeyWithKeyIds(@PathVariable("master_SAE_ID") String masterSAEId, KeyQueryReq queryReq) {
+    public ReturnData postKeyWithKeyIds(@PathVariable("master_SAE_ID") String masterSAEId,@RequestBody KeyQueryReq queryReq) {
         IKmeService iKmeService = kmeRoute(masterSAEId);
         List<String> keyIdList = queryReq.getKeyQueryReqInfo().stream()
                 .map(KeyQueryReq.KeyQueryInfo::getKeyId)

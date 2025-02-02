@@ -71,7 +71,7 @@ public class SimpleCache implements KeyEntityCache {
 
     @Override
     public KeyEntity queryEntity(String keyId) {
-        return unAllocatedKey.get(keyId);
+        return allocatedKey.get(keyId);
     }
 
     /**
@@ -196,7 +196,7 @@ public class SimpleCache implements KeyEntityCache {
     }
 
     private Boolean addKeyEntityToCacheMap(Collection<KeyEntity> keyEntityList, Map<String, KeyEntity> cacheMap) {
-        if (Objects.isNull(keyEntityList) || Objects.isNull(cacheMap) || keyEntityList.isEmpty() || cacheMap.isEmpty()) {
+        if (Objects.isNull(keyEntityList) || Objects.isNull(cacheMap) || keyEntityList.isEmpty()) {
             return true;
         }
         boolean isConflict = false;
@@ -211,7 +211,7 @@ public class SimpleCache implements KeyEntityCache {
             keyEntityList.stream().map(KeyEntity::getKeyId).forEach(cacheMap::remove);
             return false;
         }
-        return false;
+        return true;
     }
 
     @Override

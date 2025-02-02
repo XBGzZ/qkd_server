@@ -94,7 +94,13 @@ public class LocalKmeServiceImpl implements LocalKmeService {
 
     @Override
     public HandleResult<KeyDataResp> querySAEKeyById(String querySaeId, List<String> keyId) {
-        List<KeyEntity> keyEntities = manager.queryAssignedKeyByKeyId(Set.of(querySaeId));
+        List<KeyEntity> keyEntities = manager.queryAssignedKeyByKeyId(keyId);
+        if (keyEntities.isEmpty()) {
+            log.warn("All [{}] keyIds is not exists",keyId.size());
+            return HandleResult.<KeyDataResp>builder()
+                    .errorCode(KeyErrorCode.KEY_ERROR)
+                    .build();
+        }
         ArrayList<KeyEntity> result = new ArrayList<>();
         for (var item : keyEntities) {
             if (!item.isAccessAble(querySaeId)) {

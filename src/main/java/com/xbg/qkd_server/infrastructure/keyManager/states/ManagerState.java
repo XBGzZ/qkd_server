@@ -81,7 +81,7 @@ public class ManagerState implements IManagerState<Object> {
      */
     @Override
     public Object getExtensionStatus() {
-        throw new NotSupportException();
+        return null;
     }
 
 }

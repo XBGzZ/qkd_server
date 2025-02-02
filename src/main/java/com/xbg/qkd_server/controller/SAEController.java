@@ -69,7 +69,7 @@ public class SAEController {
      * @return
      */
     @PostMapping("/{slave_SAE_ID}/enc_keys")
-    public ReturnData postKeyEncKeys(@PathVariable("slave_SAE_ID") @NonNull String slaveSAEId, KeyAcquireReq keyAcquire) {
+    public ReturnData postKeyEncKeys(@PathVariable("slave_SAE_ID") @NonNull String slaveSAEId, @RequestBody KeyAcquireReq keyAcquire) {
         IKmeService iKmeService = kmeRoute(slaveSAEId);
         if (Objects.isNull(iKmeService)) {
             return KeyDataResp.builder().build();
@@ -121,8 +121,8 @@ public class SAEController {
     }
 
     protected IKmeService kmeRoute(String targetSAEId) {
-        Boolean contain = localKmeService.containTargetSAEKey(targetSAEId);
-        if (contain) {
+        String kmeId = routerService.queryKMEbySAEId(targetSAEId);
+        if (kmeId.equals(routerService.getCurrConnectKMEId())) {
             return localKmeService;
         } else {
             // TODO 跨端服务

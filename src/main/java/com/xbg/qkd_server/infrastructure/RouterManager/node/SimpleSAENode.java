@@ -1,5 +1,6 @@
 package com.xbg.qkd_server.infrastructure.RouterManager.node;
 
+import com.xbg.qkd_server.infrastructure.RouterManager.KMENode;
 import com.xbg.qkd_server.infrastructure.RouterManager.SAENode;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -19,7 +20,6 @@ import java.util.Objects;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 public final class SimpleSAENode extends SecurityAbstractNode implements SAENode {
-
 
     private SimpleKMENode kmeNode = null;
 
@@ -45,5 +45,10 @@ public final class SimpleSAENode extends SecurityAbstractNode implements SAENode
     @Override
     public NodeType getNodeType() {
         return NodeType.SAE;
+    }
+
+    @Override
+    public KMENode getKMENode() {
+        return kmeNode;
     }
 }

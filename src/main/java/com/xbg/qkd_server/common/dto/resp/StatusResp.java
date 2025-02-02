@@ -28,13 +28,13 @@ public class StatusResp extends NormalData {
     @JsonProperty("target_KME_ID")
     String targetKMEId;
 
-    // 当前SAE id
-    @JsonProperty("master_SAE_ID")
-    String masterSAEId;
-
     // 所请求对端的 SAE id
     @JsonProperty("slave_SAE_ID")
     String slaveSAEId;
+
+    // 当前SAE id
+    @JsonProperty("master_SAE_ID")
+    String masterSAEId;
 
     // 目标KEM默认密钥长度
     @JsonProperty("key_size")

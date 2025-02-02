@@ -127,7 +127,7 @@ public class LocalKmeServiceImpl implements LocalKmeService {
         }
         StatusResp adapter = StatusResp.adapter(iManagerState);
         // 只需要填写对应的信息即可
-        adapter.setTarget(slaveSAEId, routerManager.getCurrentSAEId());
+        adapter.setTarget(slaveSAEId, routerManager.getCurrentKME());
         adapter.setSource(routerManager.getCurrentSAEId(), routerManager.getCurrentKME());
         return HandleResult.<StatusResp>builder()
                 .result(adapter)

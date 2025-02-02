@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.net.*;
 import java.util.Enumeration;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -42,7 +43,7 @@ public class IpUtils {
     }
 
     public static Integer getConnectPort() {
-        return currentPort.get();
+        return Optional.ofNullable(currentPort.get()).orElse(0);
     }
 
     public static void cleanConnectPort() {

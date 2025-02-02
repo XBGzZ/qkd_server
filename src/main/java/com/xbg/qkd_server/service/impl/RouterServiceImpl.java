@@ -1,9 +1,17 @@
 package com.xbg.qkd_server.service.impl;
 
+import com.xbg.qkd_server.common.enums.ErrorCode;
+import com.xbg.qkd_server.common.enums.RouterErrorCode;
+import com.xbg.qkd_server.common.errors.KMEException;
+import com.xbg.qkd_server.infrastructure.RouterManager.KMENode;
 import com.xbg.qkd_server.infrastructure.RouterManager.KmeRouterManager;
+import com.xbg.qkd_server.infrastructure.RouterManager.SAENode;
 import com.xbg.qkd_server.service.IRouterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,6 +37,18 @@ public class RouterServiceImpl implements IRouterService {
     @Override
     public String getCurrConnectKMEId() {
         return routerManager.getCurrentKME();
+    }
+
+    @Override
+    public String queryKMEbySAEId(String saeId) {
+        Optional<SAENode> saeNode = routerManager.querySAEBySAEId(saeId);
+        if (saeNode.isEmpty()) {
+            throw new KMEException(RouterErrorCode.CAN_NOT_FIND_SAE_NODE);
+        }
+        if (Objects.isNull(saeNode.get().getKMENode())) {
+            return "";
+        }
+        return saeNode.get().getKMENode().nodeId();
     }
 
 

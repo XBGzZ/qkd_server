@@ -7,4 +7,5 @@ package com.xbg.qkd_server.infrastructure.RouterManager;
  */
 
 public interface SAENode extends SecurityNode {
+    KMENode getKMENode();
 }

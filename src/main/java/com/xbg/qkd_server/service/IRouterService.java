@@ -18,4 +18,6 @@ public interface IRouterService {
     String getCurrConnectSAEId();
 
     String getCurrConnectKMEId();
+
+    String queryKMEbySAEId(String saeId);
 }

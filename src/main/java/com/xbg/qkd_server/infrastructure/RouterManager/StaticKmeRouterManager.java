@@ -202,6 +202,9 @@ public class StaticKmeRouterManager implements KmeRouterManager {
     public String getCurrentSAEId() {
         String connectIP = IpUtils.getConnectIP();
         Integer connectPort = IpUtils.getConnectPort();
+        if (!StringUtils.hasLength(connectIP)) {
+            throw new KMEException(RouterErrorCode.UNABLE_GET_SAE_IP_PORT);
+        }
         Optional<SAENode> saeByHost = findSaeByHost(new Host(connectIP, connectPort), saeNodeMap);
         if (saeByHost.isEmpty()) {
             return "";

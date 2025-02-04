@@ -1,0 +1,5 @@
+openssl genrsa -passout pass:123456 -des3 -out ./root/private.pem 4096
+
+openssl req -x509 -new -key ./root/private.pem -subj "/C=CN/ST=SC/L=CD/O=localhost/OU=localhost/CN=XBG/emailAddress=1587368455@qq.com" -passin pass:123456  -out ./root/root.crt -days 36500 -config ./openssl.cnf
+
+keytool -importcert -alias rootCA -file ./root/root.crt -keystore truststore.jks

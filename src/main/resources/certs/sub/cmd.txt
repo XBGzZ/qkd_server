@@ -1,0 +1,10 @@
+openssl genrsa -out ./sub/subca.key 4096
+
+openssl req -new -key ./sub/subca.key -subj "/C=CN/ST=SC/L=CD/O=localhost/OU=localhost/CN=XBG's SubCA/emailAddress=1587368455@qq.com" -out ./sub/subca.csr -config ./openssl.cnf
+
+openssl x509 -req -in ./sub/subca.csr -CA ./root/root.crt -CAkey ./root/private.pem -CAcreateserial -passin pass:123456 -out ./sub/subca.crt -days 365 -sha256
+
+keytool -importcert -alias subCA -file ./sub/subca.crt -keystore truststore.jks
+
+keytool -list -v -keystore truststore.jks
+

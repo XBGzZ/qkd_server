@@ -7,6 +7,17 @@ spring:
 
 server:
   port: 8080
+  ssl:
+    enabled: true
+    key-store: classpath:certs/local/local.p12
+    key-store-password: 123456
+    key-store-type: PKCS12
+    trust-store: classpath:certs/truststore.jks
+    trust-store-password: 123456
+    trust-store-type: JKS
+    client-auth: need
+http:
+  port: 8081
 
 ## 日志u配置
 logging:

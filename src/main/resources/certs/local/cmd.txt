@@ -1,0 +1,13 @@
+# 1. 生成Local ECC私钥
+openssl ecparam -name prime256v1 -genkey -out ./local/local.key
+
+# 2. 生成Local证书的CSR
+openssl req -new -key ./local/local.key -passin pass:123456 -out ./local/local.csr -subj "/C=CN/ST=SC/L=CD/O=localhost/OU=localhost/CN=XBG's Local1/emailAddress=1587368455@qq.com" -config ./openssl.cnf -extensions usr_cert
+
+# 3. 使用SubCA签发Local证书
+openssl x509 -req -in ./local/local.csr -CA ./sub/subca.crt -CAkey ./sub/subca.key -passin pass:123456 -CAcreateserial -out ./local/local.crt -days 365 -sha256 -extfile ./openssl.cnf -extensions usr_cert
+
+openssl pkcs12 -export -out ./local/local.p12 -inkey ./local/local.key -in ./local/local.crt -certfile ./sub/subca.crt -passout pass:123456
+
+keytool -importkeystore -srckeystore ./local/local.p12 -srcstoretype pkcs12 -destkeystore local.jks
+

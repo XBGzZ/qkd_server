@@ -6,8 +6,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import java.security.cert.X509Certificate;
-
 /**
  * Created with IntelliJ IDEA.
  * Description:
@@ -20,14 +18,14 @@ import java.security.cert.X509Certificate;
  */
 @Component
 public class IpInterceptor implements HandlerInterceptor {
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String ipAddr = IpUtils.getIpAddr(request);
         Integer port = IpUtils.getPort(request);
         IpUtils.setConnectIP(ipAddr);
         IpUtils.setConnectPort(port);
-        X509Certificate[] certs = (X509Certificate[]) request.getAttribute("javax.servlet.request.X509Certificate");
-        System.out.println(certs);
+        var cert = request.getAttribute("jakarta.servlet.request.X509Certificate");
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 

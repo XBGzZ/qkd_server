@@ -1,0 +1,15 @@
+keytool -genkey -alias localhost -keyalg RSA -keysize 2048 -sigalg SHA256withRSA -keystore localhost.jks -dname CN=localhost,OU=Test,O=pkslow,L=Guangzhou,C=CN -validity 731 -storepass 123456 -keypass 123456
+
+keytool -export -alias localhost -file localhost.cer -keystore localhost.jks
+
+keytool -genkey -alias client -keyalg RSA -keysize 2048 -sigalg SHA256withRSA -keystore client.jks -dname CN=client,OU=Test,O=pkslow,L=Guangzhou,C=CN -validity 731 -storepass 123456 -keypass 123456
+
+keytool -export -alias client -file client.cer -keystore client.jks
+
+keytool -import -alias client -file client.cer -keystore localhost.jks
+
+keytool -import -alias localhost -file localhost.cer -keystore client.jks
+
+keytool -list -keystore localhost.jks
+
+keytool -importkeystore -srckeystore client.jks -destkeystore client.p12 -srcstoretype JKS -deststoretype PKCS12 -srcstorepass 123456 -deststorepass 123456 -srckeypass 123456 -destkeypass 123456 -srcalias client -destalias client -noprompt

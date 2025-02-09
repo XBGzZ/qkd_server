@@ -6,18 +6,17 @@ spring:
       add-mappings: false #关闭资源映射，不然404无法拦截
 
 server:
-  port: 8080
+  port: 9090
   ssl:
     enabled: true
-    key-store: classpath:certs/local/local.p12
+    key-store-type: JKS
+    key-store: classpath:certs/test/localhost.jks
     key-store-password: 123456
-    key-store-type: PKCS12
-    trust-store: classpath:certs/truststore.jks
+    trust-store: classpath:certs/test/localhost.jks
     trust-store-password: 123456
+    trust-store-provider: SUN
     trust-store-type: JKS
     client-auth: need
-http:
-  port: 8081
 
 ## 日志u配置
 logging:

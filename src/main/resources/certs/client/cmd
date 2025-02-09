@@ -8,3 +8,6 @@ openssl req -new -key ./client/client.key -passin pass:123456 -out ./client/clie
 openssl x509 -req -in ./client/client.csr -CA ./sub/subca.crt -CAkey ./sub/subca.key -passin pass:123456 -CAcreateserial -out ./client/client.crt -days 365 -sha256
 
 openssl pkcs12 -export -out ./client/client.p12 -inkey ./client/client.key -in ./client/client.crt -certfile ./sub/subca.crt -passout pass:123456
+
+keytool -importkeystore -srckeystore ./client/client.p12 -srcstoretype pkcs12 -destkeystore truststore.jks
+

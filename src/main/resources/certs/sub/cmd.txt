@@ -4,6 +4,8 @@ openssl req -new -key ./sub/subca.key -subj "/C=CN/ST=SC/L=CD/O=localhost/OU=loc
 
 openssl x509 -req -in ./sub/subca.csr -CA ./root/root.crt -CAkey ./root/private.pem -CAcreateserial -passin pass:123456 -out ./sub/subca.crt -days 365 -sha256
 
+openssl pkcs12 -export -out ./sub/subca.pfx -inkey ./sub/subca.key -in ./sub/subca.crt -passin pass:123456
+
 keytool -importcert -alias subCA -file ./sub/subca.crt -keystore truststore.jks
 
 keytool -list -v -keystore truststore.jks

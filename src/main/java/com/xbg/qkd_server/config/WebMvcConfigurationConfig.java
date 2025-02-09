@@ -21,4 +21,7 @@ public class WebMvcConfigurationConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(ipInterceptor).addPathPatterns("/**");
     }
+
+
+
 }

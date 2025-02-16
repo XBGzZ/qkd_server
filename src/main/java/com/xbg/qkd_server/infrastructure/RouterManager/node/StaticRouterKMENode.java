@@ -1,5 +1,8 @@
 package com.xbg.qkd_server.infrastructure.RouterManager.node;
 
+import com.xbg.qkd_server.common.enums.CommonErrorCode;
+import com.xbg.qkd_server.common.enums.ErrorCode;
+import com.xbg.qkd_server.common.errors.KMEException;
 import com.xbg.qkd_server.infrastructure.RouterManager.Host;
 import com.xbg.qkd_server.infrastructure.RouterManager.KMENode;
 import lombok.EqualsAndHashCode;
@@ -21,18 +24,18 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @date 2025-01-29 23:17
  */
 @EqualsAndHashCode(callSuper = true)
-public final class SimpleKMENode extends SecurityAbstractNode implements KMENode {
+public final class StaticRouterKMENode extends SecurityAbstractNode implements KMENode {
 
 
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
-    private final Set<SimpleSAENode> saeNodes = new HashSet<>();
+    private final Set<StaticRouterSAENode> saeNodes = new HashSet<>();
 
-    public SimpleKMENode(String id, String ip, Integer port) {
+    public StaticRouterKMENode(String id, String ip, Integer port) {
         super(id, ip, port);
     }
 
-    public SimpleKMENode(String id, String ip) {
+    public StaticRouterKMENode(String id, String ip) {
         super(id, ip);
     }
 
@@ -41,7 +44,7 @@ public final class SimpleKMENode extends SecurityAbstractNode implements KMENode
         return NodeType.KME;
     }
 
-    public Boolean regSAENode(SimpleSAENode node) {
+    public Boolean regSAENode(StaticRouterSAENode node) {
         boolean add = true;
         lock.writeLock().lock();
         add = saeNodes.add(node);
@@ -49,28 +52,32 @@ public final class SimpleKMENode extends SecurityAbstractNode implements KMENode
         return add;
     }
 
-    public Optional<SimpleSAENode> queryById(String saeId) {
+    public Optional<StaticRouterSAENode> queryById(String saeId) {
         lock.readLock().lock();
-        Optional<SimpleSAENode> findOne = saeNodes.stream().filter(node -> Objects.equals(node.getId(), saeId))
+        Optional<StaticRouterSAENode> findOne = saeNodes.stream().filter(node -> Objects.equals(node.getId(), saeId))
                 .findAny();
         lock.readLock().unlock();
         return findOne;
     }
 
-    public Optional<SimpleSAENode> queryByIp(String saeIp) {
+    public Optional<StaticRouterSAENode> queryByIp(String saeIp) {
         lock.readLock().lock();
-        Optional<SimpleSAENode> findOne = saeNodes.stream().filter(node -> Objects.equals(node.getHost().getIp(), saeIp))
+        Optional<StaticRouterSAENode> findOne = saeNodes.stream().filter(node -> Objects.equals(node.getHost().getIp(), saeIp))
                 .findAny();
         lock.readLock().unlock();
         return findOne;
     }
 
-    public Optional<SimpleSAENode> queryByHost(String saeIp, Integer saePort) {
+    public Optional<StaticRouterSAENode> queryByHost(String saeIp, Integer saePort) {
         lock.readLock().lock();
-        Optional<SimpleSAENode> findOne = saeNodes.stream().filter(node -> Objects.equals(node.getHost(), new Host(saeIp, saePort)))
+        Optional<StaticRouterSAENode> findOne = saeNodes.stream().filter(node -> Objects.equals(node.getHost(), new Host(saeIp, saePort)))
                 .findAny();
         lock.readLock().unlock();
         return findOne;
     }
 
+    @Override
+    public void updateHost(Host host) {
+        throw new KMEException(CommonErrorCode.NOT_SUPPORT);
+    }
 }

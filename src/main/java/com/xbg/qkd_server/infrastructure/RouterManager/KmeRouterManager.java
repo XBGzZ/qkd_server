@@ -23,18 +23,11 @@ public interface KmeRouterManager {
 
     Optional<SAENode> querySAEBySAEId(String saeId);
 
-    List<SAENode> querySAENodeByHost(Host host);
-
-    List<SAENode> querySAENodeByIpPort(String ipPort,Integer port);
-
     Optional<KMENode> queryKMEByKMEId(String saeId);
 
-    List<KMENode> queryKMENodeByHost(Host host);
+    SAENode getCurrentSAEId();
 
-    List<KMENode> queryKMENodeByIpPort(String ipPort,Integer port);
+    KMENode getCurrentKME();
 
-
-    String getCurrentSAEId();
-
-    String getCurrentKME();
+    Boolean updateSAEHostInfo(String saeId, Host host);
 }

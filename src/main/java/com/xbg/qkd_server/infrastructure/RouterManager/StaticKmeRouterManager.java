@@ -2,12 +2,12 @@ package com.xbg.qkd_server.infrastructure.RouterManager;
 
 import com.xbg.qkd_server.common.enums.RouterErrorCode;
 import com.xbg.qkd_server.common.errors.KMEException;
+import com.xbg.qkd_server.common.tools.AuthUtils;
 import com.xbg.qkd_server.common.tools.IpUtils;
 import com.xbg.qkd_server.infrastructure.RouterManager.config.KMERouterConfig;
 import com.xbg.qkd_server.infrastructure.RouterManager.config.RouterConfig;
-import com.xbg.qkd_server.infrastructure.RouterManager.node.SimpleKMENode;
-import com.xbg.qkd_server.infrastructure.RouterManager.node.SimpleSAENode;
-import com.xbg.qkd_server.infrastructure.RouterManager.node.SecurityAbstractNode;
+import com.xbg.qkd_server.infrastructure.RouterManager.node.StaticRouterKMENode;
+import com.xbg.qkd_server.infrastructure.RouterManager.node.StaticRouterSAENode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
@@ -29,11 +29,13 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class StaticKmeRouterManager implements KmeRouterManager {
 
-    private final Map<Host, KMENode> kmeNodeMap = new ConcurrentHashMap<>();
+    private final Map<String, KMENode> kmeNodeMap = new ConcurrentHashMap<>();
 
-    private final Map<Host, SAENode> saeNodeMap = new ConcurrentHashMap<>();
+    private final Map<String, SAENode> saeNodeMap = new ConcurrentHashMap<>();
 
     private final String currentKMEId;
+
+    private KMENode currentKMENode;
 
     public StaticKmeRouterManager(String currentKMEId) {
         this.currentKMEId = currentKMEId;
@@ -45,13 +47,19 @@ public class StaticKmeRouterManager implements KmeRouterManager {
             throw new KMEException(RouterErrorCode.ERROR_ROUTER_CONFIG);
         }
         for (var kme : kmeList) {
-            SimpleKMENode kmeNode = new SimpleKMENode(kme.getKmeId(), kme.getIpAddr(), kme.getPort());
-            kmeNodeMap.put(kmeNode.getHost(), kmeNode);
-            for (var sae : kme.getSae()) {
-                SimpleSAENode saeNode = new SimpleSAENode(sae.getSaeId(), sae.getIpAddr(), Optional.ofNullable(sae.getPort()).orElse(Host.DEFAULT_PORT));
-                saeNodeMap.put(saeNode.getHost(), saeNode);
+            StaticRouterKMENode kmeNode = new StaticRouterKMENode(kme.getKmeId(), kme.getIpAddr(), kme.getPort());
+            if (kme.getKmeId().equals(currentKMEId)) {
+                currentKMENode = kmeNode;
+            }
+            kmeNodeMap.put(kmeNode.getId(), kmeNode);
+            for (var sae : kme.getSaeIds()) {
+                StaticRouterSAENode saeNode = new StaticRouterSAENode(sae);
+                saeNodeMap.put(sae, saeNode);
                 saeNode.bindKMENode(kmeNode);
             }
+        }
+        if (Objects.isNull(currentKMENode)) {
+            throw new KMEException(RouterErrorCode.MISSING_CURRENT_KME_ID);
         }
     }
 
@@ -86,23 +94,16 @@ public class StaticKmeRouterManager implements KmeRouterManager {
                 return false;
             }
             ipHost.add(kmeHost);
-            for (var sae : kme.getSae()) {
-                String saeId = sae.getSaeId();
-                String saeHost = sae.getIpAddr() + ":" + sae.getPort();
+            for (var saeId : kme.getSaeIds()) {
                 if (nodeIdSet.contains(saeId)) {
                     log.error("config error, kme[{}]'s sae[{}] has duplicate id [{}] ", kmeIndex, saeIndex, saeId);
                     return false;
                 }
                 nodeIdSet.add(saeId);
-                if (ipHost.contains(saeHost)) {
-                    log.error("config error, kme[{}]'s sae[{}] has duplicate host [{}] ", kmeIndex, saeIndex, saeHost);
-                    return false;
-                }
-                ipHost.add(saeHost);
                 saeIndex++;
             }
             saeIndex = 0;
-            kmeIndex ++;
+            kmeIndex++;
         }
         if (!containCurrKMEIdFlag) {
             log.error("config error, missing current kme name [{}]", currentKMEId);
@@ -111,41 +112,8 @@ public class StaticKmeRouterManager implements KmeRouterManager {
         return true;
     }
 
-    /**
-     * Host和Node是一对一映射，在这种模式下
-     * 只能寻找到一个Node
-     *
-     * @param host
-     * @return
-     */
-    private <T extends SecurityNode> Optional<T> findSaeByHost(Host host, Map<Host, T> nodeMap) {
-        Optional<T> opt = Optional.empty();
-        for (Host saeHosts : nodeMap.keySet()) {
-            if (hostMatchCheck(saeHosts, host)) {
-                opt = Optional.of(nodeMap.get(saeHosts));
-                break;
-            }
-        }
-        return opt;
-    }
 
-    /**
-     * 匹配模式，允许寻找多个节点
-     *
-     * @param host
-     * @return
-     */
-    private <T extends SecurityNode> List<T> matchAllSaeByHost(Host host, Map<Host, T> nodeMap) {
-        List<T> list = new ArrayList<>();
-        for (Host saeHosts : nodeMap.keySet()) {
-            if (hostMatchCheck(saeHosts, host)) {
-                list.add(nodeMap.get(saeHosts));
-            }
-        }
-        return list;
-    }
-
-    private <T extends SecurityNode> Optional<T> findNodeByNodeId(String nodeId, Map<Host, T> nodeMap) {
+    private <T extends SecurityNode> Optional<T> findNodeByNodeId(String nodeId, Map<String, T> nodeMap) {
         if (!StringUtils.hasLength(nodeId)) {
             return Optional.empty();
         }
@@ -154,67 +122,16 @@ public class StaticKmeRouterManager implements KmeRouterManager {
                 .findAny();
     }
 
-    /**
-     * host匹配模式
-     * 有 ip 无 port，按照ip匹配
-     * 有 ip 有 port, 按照port匹配
-     *
-     * @param hostOfConfig
-     * @param hostOfReq
-     * @return
-     */
-    private boolean hostMatchCheck(Host hostOfConfig, Host hostOfReq) {
-        if (!hostOfConfig.getIp().equals(hostOfReq.getIp())) {
+
+
+    @Override
+    public Boolean updateSAEHostInfo(String saeId, Host host) {
+        SAENode saeNode = saeNodeMap.get(saeId);
+        if (Objects.isNull(saeNode)) {
             return false;
         }
-        // 没有配置，或者配置的端口号为0
-        if (Objects.isNull(hostOfConfig.getPort()) || hostOfConfig.getPort().equals(Host.DEFAULT_PORT)) {
-            return true;
-        }
-        return hostOfConfig.getPort().equals(hostOfReq.getPort());
-    }
-
-    /**
-     * 通过host查询所有匹配的节点
-     *
-     * @param host
-     * @param nodeMap
-     * @param <T>
-     * @return
-     */
-    private <T extends SecurityNode> List<T> queryNodeByHost(Host host, Map<Host, T> nodeMap) {
-        if (!IpUtils.isValidIPv4(host.getIp())) {
-            log.error("invalid ip address: [{}]", host.getIp());
-            throw new KMEException(RouterErrorCode.INVALID_IP_ADDRESS_FORMAT);
-        }
-        List<T> list = new ArrayList<>();
-        // 无端口匹配模式
-        if (Host.DEFAULT_PORT.equals(host.getPort())) {
-            list.addAll(matchAllSaeByHost(host, nodeMap));
-        } else {
-            Optional<T> saeByHost = findSaeByHost(host, nodeMap);
-            saeByHost.ifPresent(list::add);
-        }
-        return list;
-    }
-
-    @Override
-    public String getCurrentSAEId() {
-        String connectIP = IpUtils.getConnectIP();
-        Integer connectPort = IpUtils.getConnectPort();
-        if (!StringUtils.hasLength(connectIP)) {
-            throw new KMEException(RouterErrorCode.UNABLE_GET_SAE_IP_PORT);
-        }
-        Optional<SAENode> saeByHost = findSaeByHost(new Host(connectIP, connectPort), saeNodeMap);
-        if (saeByHost.isEmpty()) {
-            return "";
-        }
-        return saeByHost.get().nodeId();
-    }
-
-    @Override
-    public String getCurrentKME() {
-        return currentKMEId;
+        saeNode.updateHost(host);
+        return true;
     }
 
     @Override
@@ -240,30 +157,19 @@ public class StaticKmeRouterManager implements KmeRouterManager {
         return findNodeByNodeId(saeId, saeNodeMap);
     }
 
-
-    @Override
-    public List<SAENode> querySAENodeByHost(Host host) {
-        return queryNodeByHost(host, saeNodeMap);
-    }
-
-    @Override
-    public List<SAENode> querySAENodeByIpPort(String ipPort, Integer port) {
-        return querySAENodeByHost(new Host(ipPort, port));
-    }
-
     @Override
     public Optional<KMENode> queryKMEByKMEId(String kmeId) {
         return findNodeByNodeId(kmeId, kmeNodeMap);
     }
 
     @Override
-    public List<KMENode> queryKMENodeByHost(Host host) {
-        return matchAllSaeByHost(host, kmeNodeMap);
+    public SAENode getCurrentSAEId() {
+        return saeNodeMap.get(AuthUtils.getCommonName());
     }
 
     @Override
-    public List<KMENode> queryKMENodeByIpPort(String ipPort, Integer port) {
-        return queryKMENodeByHost(new Host(ipPort, port));
+    public KMENode getCurrentKME() {
+        return currentKMENode;
     }
 
 }

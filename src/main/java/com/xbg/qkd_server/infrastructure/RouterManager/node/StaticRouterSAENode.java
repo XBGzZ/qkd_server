@@ -1,5 +1,6 @@
 package com.xbg.qkd_server.infrastructure.RouterManager.node;
 
+import com.xbg.qkd_server.infrastructure.RouterManager.Host;
 import com.xbg.qkd_server.infrastructure.RouterManager.KMENode;
 import com.xbg.qkd_server.infrastructure.RouterManager.SAENode;
 import lombok.EqualsAndHashCode;
@@ -19,19 +20,15 @@ import java.util.Objects;
  */
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public final class SimpleSAENode extends SecurityAbstractNode implements SAENode {
+public final class StaticRouterSAENode extends SecurityAbstractNode implements SAENode {
 
-    private SimpleKMENode kmeNode = null;
+    private StaticRouterKMENode kmeNode = null;
 
-    public SimpleSAENode(String id, String ip, Integer port) {
-        super(id, ip, port);
+    public StaticRouterSAENode(String nodeId) {
+        super(nodeId, "0.0.0.0", 0);
     }
 
-    public SimpleSAENode(String id, String ip) {
-        super(id, ip);
-    }
-
-    public Boolean bindKMENode(SimpleKMENode kmeNode) {
+    public Boolean bindKMENode(StaticRouterKMENode kmeNode) {
         if (Objects.isNull(kmeNode)) {
             return false;
         }
@@ -42,6 +39,10 @@ public final class SimpleSAENode extends SecurityAbstractNode implements SAENode
         return true;
     }
 
+    public void updateNodeHost(Host host) {
+        this.host = host;
+    }
+
     @Override
     public NodeType getNodeType() {
         return NodeType.SAE;
@@ -50,5 +51,10 @@ public final class SimpleSAENode extends SecurityAbstractNode implements SAENode
     @Override
     public KMENode getKMENode() {
         return kmeNode;
+    }
+
+    @Override
+    public void updateHost(Host host) {
+        this.host = host;
     }
 }

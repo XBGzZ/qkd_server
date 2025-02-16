@@ -14,4 +14,6 @@ public interface SecurityNode {
     String ipAddr();
 
     String hostName();
+
+    void updateHost(Host host);
 }

@@ -31,12 +31,12 @@ public class RouterServiceImpl implements IRouterService {
 
     @Override
     public String getCurrConnectSAEId() {
-        return routerManager.getCurrentSAEId();
+        return routerManager.getCurrentSAEId().nodeId();
     }
 
     @Override
     public String getCurrConnectKMEId() {
-        return routerManager.getCurrentKME();
+        return routerManager.getCurrentKME().nodeId();
     }
 
     @Override

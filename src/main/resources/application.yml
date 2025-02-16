@@ -49,15 +49,7 @@ key-manager:
       - kme-id: Alice
         ip-addr: 127.0.0.1
         port: 8080
-        sae:
-          - sae-id: SAE1
-            ip-addr: 127.0.0.1
-            port: 0
-      - kme-id: Bob
-        ip-addr: 127.0.0.1
-        port: 8081
-        sae:
-          - sae-id: SAE2
-            ip-addr: 127.0.0.1
-            port: 12
+        sae-ids: SAE1,SAE2,client
+
+
 

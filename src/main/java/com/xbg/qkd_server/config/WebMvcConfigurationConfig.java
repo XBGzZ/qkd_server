@@ -1,10 +1,9 @@
 package com.xbg.qkd_server.config;
 
-import com.xbg.qkd_server.interceptor.IpInterceptor;
+import com.xbg.qkd_server.interceptor.StaticRouterInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -15,7 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfigurationConfig implements WebMvcConfigurer {
     @Autowired
-    IpInterceptor ipInterceptor;
+    StaticRouterInterceptor ipInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

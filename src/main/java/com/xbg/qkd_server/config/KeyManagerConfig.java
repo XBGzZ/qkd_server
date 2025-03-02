@@ -66,7 +66,7 @@ public class KeyManagerConfig {
     @ConditionalOnProperty(prefix = CONFIG_PREFIX_KEY_MANAGER_CONFIG, name = CONFIG_PREFIX_KEY_MANAGER_STRATEGY, havingValue = "simple_key_manager")
     @ConfigCheck(KeyManagerConfigChecker.class)
     public KeyEntityManager simpleKeyEntityManager(SimpleKeyEntityFactory factory, BaseKeyManagerConfig config) {
-        return new SimpleKeyEntityManager(new SimpleCache(config.getMaxKeyCount()), config, factory);
+        return new SimpleKeyEntityManager(new SimpleCache(config.getMaxKeyCount(),config.getKeyFactoryConfig().getMinKeySize()), config, factory);
     }
 
 

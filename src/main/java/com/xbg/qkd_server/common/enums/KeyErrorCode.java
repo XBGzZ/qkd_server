@@ -7,6 +7,8 @@ package com.xbg.qkd_server.common.enums;
  */
 
 public enum KeyErrorCode implements ErrorCode {
+    // =============== 配置相关 ================
+    CONFIG_ERROR_INVALID_INIT_PARAM("不合法的初始化参数"),
     // =============== 密钥相关通用异常 ================
     KEY_ERROR("通用错误"),
     KEY_TRY_LOCK_OVER_TIME("上锁超时"),
@@ -24,7 +26,7 @@ public enum KeyErrorCode implements ErrorCode {
     KEY_SIZE_TOO_LONG("获取的密钥长度超过限制"),
     KEY_SIZE_TOO_SHORT("获取的密钥长度过短"),
     KEY_TOTAL_COUNT_IS_OVER_CACHE_MAX_SIZE("密钥总数超过上限"),
-
+    KEY_PARAM_INVALID("密钥参数不合法"),
     // =============== 权限相关 ================
     KEY_SAE_NO_PERMISSION_ACQUIRE_THE_KEY("没有密钥获取权限");
 

@@ -97,5 +97,12 @@ public abstract class AbstractBaseKeyEntityManager<Cache extends KeyEntityCache,
         return resultList;
     }
 
+    /**
+     * 密钥申请合理性检查，必须是min密钥的n倍
+     * @param owner
+     * @param count
+     * @param size
+     * @return
+     */
     protected abstract ErrorCode acquireValid(String owner, Integer count, Integer size);
 }

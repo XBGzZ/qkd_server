@@ -1,5 +1,7 @@
 package com.xbg.qkd_server.infrastructure.keyManager.cache;
 
+import com.xbg.qkd_server.common.enums.KeyErrorCode;
+import com.xbg.qkd_server.common.errors.KMEException;
 import com.xbg.qkd_server.common.errors.KeyException;
 import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import static com.xbg.qkd_server.common.enums.KeyErrorCode.CONFIG_ERROR_INVALID_INIT_PARAM;
 
 /**
  * @author XBG
@@ -55,8 +59,14 @@ public class SimpleCache implements KeyEntityCache {
      */
     final private Integer maxKeyCount;
 
-    public SimpleCache(Integer maxKeyCount) {
+    final private Integer minKeySize;
+
+    public SimpleCache(Integer maxKeyCount, Integer minKeySize) {
         this.maxKeyCount = maxKeyCount;
+        if (minKeySize < 0) {
+            throw new KMEException(CONFIG_ERROR_INVALID_INIT_PARAM);
+        }
+        this.minKeySize = minKeySize;
     }
 
     /**
@@ -76,31 +86,35 @@ public class SimpleCache implements KeyEntityCache {
 
     /**
      * 申请密钥
+     *
      * @param count
      * @return
      */
     @Override
     public List<KeyEntity> acquireEntity(String saeId, Integer count, Integer size) throws KeyException {
-        if (unAllocatedKey.size() < count || count <= 0) {
+        int factor = size / minKeySize;
+        if (!acquireParamValid(count, size, factor)) {
             return List.of();
         }
+        Integer realCount = count * factor;
         List<KeyEntity> keyEntities = null;
         synchronized (unAllocatedKey) {
-            if (unAllocatedKey.size() < count) {
+            if (unAllocatedKey.size() < realCount) {
                 return List.of();
             }
             keyEntities = unAllocatedKey.values().stream()
-                    .filter(key -> key.getKeySize().equals(size))
-                    .limit(count)
+                    .filter(key -> key.getKeySize().equals(minKeySize))
+                    .limit(realCount)
                     .toList();
-            if (!count.equals(keyEntities.size())){
+            if (!realCount.equals(keyEntities.size())) {
                 return List.of();
             }
             keyEntities.stream()
-                    .peek(key->key.setOwner(saeId))
+                    .peek(key -> key.setOwner(saeId))
                     .map(KeyEntity::getKeyId)
                     .forEach(unAllocatedKey::remove);
         }
+        keyEntities = mergeKeys(keyEntities, factor);
         // 重新添加密钥
         if (!addEntity(keyEntities)) {
             return List.of();
@@ -214,6 +228,18 @@ public class SimpleCache implements KeyEntityCache {
         return true;
     }
 
+    private Boolean acquireParamValid(Integer count, Integer size, Integer factor) {
+        // 倍率因子，密钥长度除以最小密钥的大小，得到倍率因子
+        // 倍率因子乘以数量，得到最终的密钥消耗量
+        if (factor * minKeySize != size) {
+            return false;
+        }
+        if (unAllocatedKey.size() >= (count * factor) && count > 0) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public Integer releaseAll(Integer count) {
         return removeFirstRecord(count).size();
@@ -323,6 +349,29 @@ public class SimpleCache implements KeyEntityCache {
      */
     protected Boolean totalKeyDecrease(Integer count) {
         return totalKeyAdd(-count);
+    }
+
+    private List<KeyEntity> mergeKeys(List<KeyEntity> keyEntityList, Integer factor) {
+        if (factor == 1) {
+            return keyEntityList;
+        }
+        if (keyEntityList.size() % factor != 0) {
+            throw new KMEException(KeyErrorCode.KEY_PARAM_INVALID);
+        }
+        Iterator<KeyEntity> iterator = keyEntityList.iterator();
+        List<KeyEntity> mergedKeys = new ArrayList<>();
+        while (iterator.hasNext()) {
+            KeyEntity[] entityGroup = new KeyEntity[factor];
+            for (int i=0;i<factor && iterator.hasNext();i++) {
+                entityGroup[i] = iterator.next();
+            }
+            KeyEntity mergedKey = entityGroup[0];
+            for (int j=1;j<factor;j++) {
+                mergedKey.mergeKey(entityGroup[j]);
+            }
+            mergedKeys.add(mergedKey);
+        }
+        return mergedKeys;
     }
 
     protected Boolean removeKeyFromOrder(KeyEntity keyEntity) {

@@ -9,7 +9,9 @@ import lombok.ToString;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -22,9 +24,9 @@ public class SimpleKeyEntity implements KeyEntity {
     // 密钥Id
     private final String id;
     // 密钥本体
-    private final byte[] key;
+    private byte[] key;
 
-    private final Integer keySize;
+    private Integer keySize;
     // 所属 SAE
     private String owner;
 
@@ -71,6 +73,36 @@ public class SimpleKeyEntity implements KeyEntity {
     @Override
     public Integer getKeySize() {
         return keySize;
+    }
+
+    @Override
+    public byte[] getByteKey() {
+        return key;
+    }
+
+    @Override
+    public void mergeKey(List<KeyEntity> otherKeys) {
+        int totalLength = key.length;
+        for (KeyEntity otherKey : otherKeys) {
+            totalLength += otherKey.getByteKey().length;
+        }
+        ByteBuffer buffer = ByteBuffer.wrap(new byte[totalLength]);
+        buffer.put(key);
+        for (KeyEntity otherKey : otherKeys) {
+           buffer.put(otherKey.getByteKey());
+        }
+        key = buffer.array();
+        keySize = totalLength;
+    }
+
+    @Override
+    public void mergeKey(KeyEntity otherKey) {
+        int totalLength = key.length + otherKey.getByteKey().length;
+        ByteBuffer buffer = ByteBuffer.wrap(new byte[totalLength]);
+        buffer.put(key);
+        buffer.put(otherKey.getByteKey());
+        key = buffer.array();
+        keySize = totalLength;
     }
 
     @Override

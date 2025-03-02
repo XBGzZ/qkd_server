@@ -1,5 +1,6 @@
 package com.xbg.qkd_server.infrastructure.keyManager;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -26,6 +27,11 @@ public interface KeyEntity extends KeyAccessControl {
      */
     String getKey();
 
+    /**
+     * 获取密钥二进制格式
+     * @return
+     */
+    byte[] getByteKey();
     /**
      * @description: 获取 KeyId
      * @author: XBG
@@ -83,4 +89,14 @@ public interface KeyEntity extends KeyAccessControl {
     default Object getExtension() {
         return null;
     }
+
+    /**
+     * 合并密钥
+     */
+    void mergeKey(List<KeyEntity> otherKeys);
+
+    /**
+     * 合并密钥
+     */
+    void mergeKey(KeyEntity otherKey);
 }

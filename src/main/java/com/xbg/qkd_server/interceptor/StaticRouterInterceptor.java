@@ -1,7 +1,6 @@
 package com.xbg.qkd_server.interceptor;
 
 import com.xbg.qkd_server.common.enums.CertErrorCode;
-import com.xbg.qkd_server.common.enums.CommonErrorCode;
 import com.xbg.qkd_server.common.enums.RouterErrorCode;
 import com.xbg.qkd_server.common.errors.KMEException;
 import com.xbg.qkd_server.common.tools.AuthUtils;
@@ -23,7 +22,7 @@ import java.util.Optional;
  * Created with IntelliJ IDEA.
  * Description:
  * <pre style="color:#51c4d3">
- *
+ *  证书信息拦截模块
  * </pre>
  *
  * @author XBG
@@ -31,6 +30,7 @@ import java.util.Optional;
  */
 @Component
 @Slf4j
+
 public class StaticRouterInterceptor implements HandlerInterceptor {
 
     static final String OLD_CERT_ATTR = "javax.servlet.request.X509Certificate";
@@ -69,11 +69,11 @@ public class StaticRouterInterceptor implements HandlerInterceptor {
     }
 
     private Optional<X509Certificate[]> requestX509Certificate(HttpServletRequest request) {
-        X509Certificate[] certs = (X509Certificate[]) request.getAttribute("jakarta.servlet.request.X509Certificate");
+        X509Certificate[] certs = (X509Certificate[]) request.getAttribute(NEW_CERT_ATTR);
         if (certs != null) {
-            return Optional.ofNullable(certs);
+            return Optional.of(certs);
         }
-        certs = (X509Certificate[]) request.getAttribute("javax.servlet.request.X509Certificate");
+        certs = (X509Certificate[]) request.getAttribute(OLD_CERT_ATTR);
         return Optional.ofNullable(certs);
     }
 
@@ -81,10 +81,10 @@ public class StaticRouterInterceptor implements HandlerInterceptor {
         String name = cert.getSubjectX500Principal().getName();
         String[] keyPair = name.split(",");
         HashMap<String, String> stringStringHashMap = new HashMap<>();
-        for (int i = 0; i < keyPair.length; i++) {
-            int splitIndex = keyPair[i].indexOf("=");
-            var key = keyPair[i].substring(0, splitIndex);
-            var value = keyPair[i].substring(splitIndex + 1);
+        for (String s : keyPair) {
+            int splitIndex = s.indexOf("=");
+            var key = s.substring(0, splitIndex);
+            var value = s.substring(splitIndex + 1);
             stringStringHashMap.put(key, value);
         }
         return stringStringHashMap.get("CN");

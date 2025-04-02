@@ -28,6 +28,11 @@
     </scm>
     <properties>
         <java.version>17</java.version>
+        <maven-compiler-plugin-version>3.13.0</maven-compiler-plugin-version>
+        <maven-surefire-plugin-version>3.5.1</maven-surefire-plugin-version>
+        <maven-dependency-plugin-version>3.7.1</maven-dependency-plugin-version>
+        <maven-clean-plugin-version>3.4.1</maven-clean-plugin-version>
+        <maven-assembly-plugin-version>3.7.0</maven-assembly-plugin-version>
     </properties>
     <dependencies>
         <dependency>
@@ -37,12 +42,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -100,6 +99,26 @@
 
     </dependencies>
     <build>
+        <outputDirectory>${project.build.directory}/${project.name}</outputDirectory>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+                <excludes>
+                    <exclude>shell/**/*</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/src/main/resources/shell</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+        <finalName>${project.name}</finalName>
+        <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -112,6 +131,104 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <!--编译插件-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin-version}</version>
+                <configuration>
+                    <encoding>utf-8</encoding>
+                    <skip>true</skip>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>${project.name}-compiler</id>
+                        <phase>compile</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin-version}</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven-dependency-plugin-version}</version>
+                <configuration>
+                    <outputDirectory>${project.build.directory}/${project.name}/lib</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <id>copy-dependency</id>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven-assembly-plugin-version}</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>${project.basedir}/release.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>${maven-clean-plugin-version}</version>
+                <executions>
+                    <execution>
+                        <id>clean-useless</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <configuration>
+                            <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                            <filesets>
+                                <fileset>
+                                    <!--要清理的目录位置-->
+                                    <directory>${project.build.directory}</directory>
+                                    <!--是否跟随符号链接,默认false-->
+                                    <followSymlinks>false</followSymlinks>
+                                    <!--默认有些文件是不会被清理的,如果设置成false,则全部按照自定义的来处理-->
+                                    <useDefaultExcludes>false</useDefaultExcludes>
+                                    <!--对这些文件进行清理-->
+                                    <includes>
+                                        <include>**/*</include>
+                                    </includes>
+                                    <!--对这些文件不清理-->
+                                    <excludes>
+                                        <exclude>${project.name}/**/*</exclude>
+                                        <exclude>*.tar.gz</exclude>
+                                    </excludes>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

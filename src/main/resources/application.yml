@@ -17,6 +17,7 @@ server:
     trust-store-provider: SUN
     trust-store-type: JKS
     client-auth: need
+  enabled-chunked-mode: false
 
 ## 日志u配置
 logging:
@@ -49,7 +50,6 @@ key-manager:
       - kme-id: Alice
         ip-addr: 127.0.0.1
         port: 8080
-        sae-ids: SAE1,SAE2,client
-
+        sae-ids: client
 
 

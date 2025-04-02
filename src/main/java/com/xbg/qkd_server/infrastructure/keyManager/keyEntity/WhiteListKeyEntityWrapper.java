@@ -1,9 +1,9 @@
 package com.xbg.qkd_server.infrastructure.keyManager.keyEntity;
 
 import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
-import lombok.Builder;
 import lombok.ToString;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -15,7 +15,7 @@ import java.util.Set;
  * @Date 2025-01-05
  */
 @ToString
-public class WhiteListKeyEntity implements WhiteListAbility, KeyEntity {
+public class WhiteListKeyEntityWrapper implements WhiteListAbility, KeyEntity {
 
     private final KeyEntity keyEntity;
     // 可访问白名单
@@ -23,7 +23,7 @@ public class WhiteListKeyEntity implements WhiteListAbility, KeyEntity {
     // 访问控制开关
     private Boolean whiteListSwitch;
 
-    public WhiteListKeyEntity(KeyEntity keyEntity) {
+    public WhiteListKeyEntityWrapper(KeyEntity keyEntity) {
         this.keyEntity = keyEntity;
     }
 
@@ -85,6 +85,11 @@ public class WhiteListKeyEntity implements WhiteListAbility, KeyEntity {
     }
 
     @Override
+    public byte[] getByteKey() {
+        return keyEntity.getByteKey();
+    }
+
+    @Override
     public String getKeyId() {
         return keyEntity.getKeyId();
     }
@@ -107,6 +112,16 @@ public class WhiteListKeyEntity implements WhiteListAbility, KeyEntity {
     @Override
     public Integer getKeySize() {
         return keyEntity.getKeySize();
+    }
+
+    @Override
+    public void mergeKey(List<KeyEntity> otherKeys) {
+        keyEntity.mergeKey(otherKeys);
+    }
+
+    @Override
+    public void mergeKey(KeyEntity otherKey) {
+        keyEntity.mergeKey(otherKey);
     }
 
 

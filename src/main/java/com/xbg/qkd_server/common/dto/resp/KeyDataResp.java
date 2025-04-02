@@ -7,7 +7,6 @@ import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -23,7 +22,7 @@ import java.util.List;
 @Builder
 public class KeyDataResp extends NormalData {
 
-    @JsonProperty("Keys")
+    @JsonProperty("keys")
     List<KeyDataInfo> keys;
 
     // 密钥容器扩展字段

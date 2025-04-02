@@ -1,0 +1,1 @@
+java -cp "./lib/*;./*" com.xbg.qkd_server.QkdServerApplication

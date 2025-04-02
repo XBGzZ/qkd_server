@@ -2,7 +2,6 @@ package com.xbg.qkd_server.infrastructure.keyManager.keyEntity;
 
 import cn.hutool.core.util.IdUtil;
 import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
-import lombok.Getter;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -32,7 +31,7 @@ public class KeyEntityTest {
         final Integer keySize = 256;
         final String user = "Bob";
         KeyEntity timeEntity = new SimpleKeyEntity(uuid,keySize);
-        KeyEntity keyEntity = new WhiteListKeyEntity(timeEntity);
+        KeyEntity keyEntity = new WhiteListKeyEntityWrapper(timeEntity);
         System.out.println("getKeyId: " + keyEntity.getKeyId());
         System.out.println("getKey: " + keyEntity.getKey());
         keyEntity.setOwner(user);

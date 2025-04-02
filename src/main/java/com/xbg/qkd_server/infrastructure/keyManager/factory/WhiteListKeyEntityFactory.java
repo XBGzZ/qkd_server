@@ -1,7 +1,7 @@
 package com.xbg.qkd_server.infrastructure.keyManager.factory;
 
 import com.xbg.qkd_server.infrastructure.keyManager.KeyEntity;
-import com.xbg.qkd_server.infrastructure.keyManager.keyEntity.WhiteListKeyEntity;
+import com.xbg.qkd_server.infrastructure.keyManager.keyEntity.WhiteListKeyEntityWrapper;
 import org.springframework.context.annotation.Primary;
 
 import java.util.Objects;
@@ -31,7 +31,7 @@ public class WhiteListKeyEntityFactory extends BaseKeyEntityFactory {
             return null;
         }
         KeyEntity keyEntity = baseKeyEntityFactory.generateKeyEntity(id, keySize);
-        return new WhiteListKeyEntity(keyEntity);
+        return new WhiteListKeyEntityWrapper(keyEntity);
     }
 
     @Override
